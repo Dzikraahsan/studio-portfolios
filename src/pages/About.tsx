@@ -2,15 +2,17 @@ import PageTransition from "@/components/PageTransition";
 import { motion } from "framer-motion";
 
 const skills = [
-  { category: "languages", items: ["TypeScript", "JavaScript", "Go", "Python", "Rust"] },
-  { category: "frontend", items: ["React", "Next.js", "Tailwind CSS", "Framer Motion"] },
-  { category: "backend", items: ["Node.js", "PostgreSQL", "Redis", "Docker"] },
-  { category: "tools", items: ["Git", "Figma", "Linux", "CI/CD"] },
+  { category: "languages", items: ["TypeScript", "JavaScript", "PHP", "Golang", "Python", "Rust"] },
+  { category: "frontend", items: ["Tailwind CSS", "Bootstrap CSS"] },
+  { category: "backend", items: ["Node.js", "MySQL", "Firebase", "Supabase"] },
+  { category: "framework", items: ["Laravel", "React.js", "Vite", "Next.js"] },
+  { category: "tools", items: ["Git", "Figma", "Canva"] },
+  { category: "gaming", items: ["eFootball", "Clash Of Clans"] },
 ];
 
 const About = () => (
   <PageTransition>
-    <div className="container pt-32 pb-16 max-w-2xl">
+    <div className="container pt-32 -mb-10 max-w-2xl">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">about</h1>
       </motion.div>

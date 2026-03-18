@@ -4,46 +4,46 @@ import { motion } from "framer-motion";
 
 const allProjects = [
   {
-    title: "Aurora UI",
-    description: "A component library built for speed and accessibility. Ships with 40+ primitives and full dark mode support.",
+    title: "Kaifood",
+    description: "A food business website that sells various menus.",
     tags: ["React", "TypeScript", "Tailwind"],
-    link: "#",
+    link: "https://www.kaifood.web.id/",
   },
   {
-    title: "Vaultkey",
-    description: "End-to-end encrypted password manager with zero-knowledge architecture and cross-platform sync.",
-    tags: ["Go", "React", "PostgreSQL"],
-    link: "#",
+    title: "Portfolio",
+    description: "A personal portfolio that contains information about myself.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://portfoliodzikra.vercel.app/",
   },
   {
-    title: "Pixelflow",
-    description: "Real-time collaborative design tool for developers. Think Figma meets VS Code, in the browser.",
-    tags: ["WebSocket", "Canvas API", "Node.js"],
-    link: "#",
+    title: "Daily Activity",
+    description: "A website used to record daily activities, with several features that can be used.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://tracking-activities.vercel.app/",
   },
   {
-    title: "Nightowl Analytics",
-    description: "Privacy-first web analytics dashboard with real-time event tracking and zero cookies.",
-    tags: ["Next.js", "ClickHouse", "Redis"],
-    link: "#",
+    title: "Dashboard",
+    description: "A website that has the function of recording employee work and performance statistics.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://dashboard-40.vercel.app/",
   },
   {
-    title: "Codeframe",
-    description: "Browser-based IDE with AI-powered code completion, linting, and one-click deployment.",
-    tags: ["Monaco", "Docker", "WebContainer"],
-    link: "#",
+    title: "Finance Flow",
+    description: "Web prototype for structured and recorded financial use.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://finance-flow-beryl.vercel.app/",
   },
   {
-    title: "Syncwave",
-    description: "Offline-first note-taking app with real-time sync powered by CRDTs and local-first architecture.",
-    tags: ["Yjs", "IndexedDB", "React"],
-    link: "#",
+    title: "Cleanliness assessment",
+    description: "The website is used to assess the cleanliness of the classroom environment.",
+    tags: ["Laravel", "Blade PHP", "MySQL"],
+    link: "https://github.com/Dzikraahsan/penilaian-kebersihan",
   },
 ];
 
 const Projects = () => (
   <PageTransition>
-    <div className="container pt-32 pb-16">
+    <div className="container pt-32 -mb-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

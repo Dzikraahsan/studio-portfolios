@@ -27,7 +27,7 @@ const experiments = [
 
 const Labs = () => (
   <PageTransition>
-    <div className="container pt-32 pb-16">
+    <div className="container pt-32 -mb-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">labs</h1>
         <p className="text-muted-foreground max-w-lg mb-12">

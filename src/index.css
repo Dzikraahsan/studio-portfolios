@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 4%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 100%;
 
     --card: 0 0% 7%;
@@ -15,8 +15,9 @@
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 160 84% 39%;
-    --primary-foreground: 0 0% 100%;
+    /* PRIMARY (biru muda soft) */
+    --primary: 202 100% 78%;
+    --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 9%;
     --secondary-foreground: 0 0% 63%;
@@ -24,33 +25,60 @@
     --muted: 0 0% 9%;
     --muted-foreground: 240 4% 46%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    /* ACCENT */
+    --accent: 202 100% 78%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 160 84% 39%;
+
+    /* FOCUS / RING */
+    --ring: 202 100% 78%;
 
     --radius: 0.75rem;
 
+    /* SIDEBAR */
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 63%;
-    --sidebar-primary: 160 84% 39%;
-    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-primary: 202 100% 78%;
+    --sidebar-primary-foreground: 0 0% 0%;
+
     --sidebar-accent: 0 0% 9%;
     --sidebar-accent-foreground: 0 0% 100%;
+
     --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-ring: 202 100% 78%;
 
     /* Custom tokens */
     --surface: 0 0% 9.4%;
     --text-secondary: 240 5% 65%;
     --text-muted: 240 4% 46%;
-    --glow: 160 84% 39%;
+
+    /* GLOW */
+    --glow: 202 100% 78%;
   }
+}
+
+.wave {
+  display: inline-block;
+  animation: wave 3s infinite;
+  transform-origin: 70% 70%;
+  color: #90d5ff;
+  filter: drop-shadow(0 0 6px #90d5ff);
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(14deg); }
+  30% { transform: rotate(-8deg); }
+  45% { transform: rotate(14deg); }
+  60% { transform: rotate(-4deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
 }
 
 @layer base {

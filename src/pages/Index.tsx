@@ -3,32 +3,34 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import ProjectCard from "@/components/ProjectCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHand } from "@fortawesome/free-solid-svg-icons";
 
 const featuredProjects = [
   {
-    title: "Aurora UI",
-    description: "A component library built for speed and accessibility. Ships with 40+ primitives and full dark mode support.",
+    title: "Kaifood",
+    description: "A food business website that sells various menus.",
     tags: ["React", "TypeScript", "Tailwind"],
-    link: "#",
+    link: "https://www.kaifood.web.id/",
   },
   {
-    title: "Vaultkey",
-    description: "End-to-end encrypted password manager with zero-knowledge architecture and cross-platform sync.",
-    tags: ["Go", "React", "PostgreSQL"],
-    link: "#",
+    title: "Portfolio",
+    description: "A personal portfolio that contains information about myself.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://portfoliodzikra.vercel.app/",
   },
   {
-    title: "Pixelflow",
-    description: "Real-time collaborative design tool for developers. Think Figma meets VS Code, in the browser.",
-    tags: ["WebSocket", "Canvas API", "Node.js"],
-    link: "#",
+    title: "Daily Activity",
+    description: "A website used to record daily activities, with several features that can be used.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://tracking-activities.vercel.app/",
   },
 ];
 
 const Index = () => {
   return (
     <PageTransition>
-      <div className="container pt-32 pb-16">
+      <div className="container pt-32 -mb-12">
         {/* Hero */}
         <section className="min-h-[60vh] flex flex-col justify-center">
           <motion.p
@@ -45,7 +47,7 @@ const Index = () => {
             transition={{ delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight mb-6 max-w-2xl"
           >
-            hey, i'm <span className="text-gradient">yourname</span> 👋
+            hey, i'm <span className="text-gradient">Dzikra</span> <span className="wave">👋</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
