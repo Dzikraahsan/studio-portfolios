@@ -87,7 +87,7 @@ const Index = () => {
           className="py-16 border-t border-border/40"
         >
           <blockquote className="font-mono text-sm text-muted-foreground text-right max-w-md ml-auto italic leading-relaxed">
-            "a journey that began as curiosity and evolved into a deep commitment to craft and problem-solving."
+            "Good judgement comes from experience, and experience comes from bad judgement."
           </blockquote>
         </motion.section>
 
@@ -100,9 +100,9 @@ const Index = () => {
         >
           <h2 className="font-mono text-xs text-primary tracking-widest uppercase mb-6">about</h2>
           <p className="text-muted-foreground leading-relaxed max-w-2xl mb-4">
-            i'm a full-stack developer who cares deeply about the intersection of design and engineering. 
-            i believe the best software is built when you sweat the details — from pixel-perfect interfaces 
-            to rock-solid architecture.
+            i'm a software engineer and frontend developer who loves building things at the intersection of design and engineering.
+            i believe great software is equal parts technical precision and human empathy — every interaction should feel intentional,
+            and every detail should have a purpose.
           </p>
           <Link to="/about" className="font-mono text-xs text-primary hover:underline inline-flex items-center gap-1">
             read more <ArrowRight size={12} />

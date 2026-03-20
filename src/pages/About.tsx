@@ -24,18 +24,18 @@ const About = () => (
         className="space-y-5 text-muted-foreground leading-relaxed mb-16"
       >
         <p>
-          i'm a full-stack software engineer who loves building things at the intersection of design and engineering. 
-          i believe great software is equal parts technical rigor and human empathy — every interaction should feel 
-          intentional and every system should be built to last.
+          i'm a software engineer and frontend developer who loves building things at the intersection of design and engineering.
+          i believe great software is equal parts technical precision and human empathy — every interaction should feel intentional,
+          and every detail should have a purpose.
         </p>
         <p>
-          i started coding out of curiosity — tinkering with scripts, breaking things, and learning how to put them 
-          back together. that curiosity hasn't faded. today i spend my time building tools, contributing to open source, 
-          and exploring new ways to make the web faster, more accessible, and more beautiful.
+          i started coding out of curiosity — tinkering with small projects, breaking things, and figuring out how to put them back together.
+          that curiosity never really went away. these days, i spend most of my time crafting user interfaces, building web applications,
+          and exploring ways to make the web feel faster, more intuitive, and more enjoyable to use.
         </p>
         <p>
-          when i'm not coding, you'll find me reading about systems thinking, experimenting with typography, 
-          or going on long walks with a podcast.
+          when i'm not coding, you'll probably find me diving into design systems, experimenting with typography,
+          or just taking a walk while listening to a good podcast.
         </p>
       </motion.div>
 
@@ -48,8 +48,8 @@ const About = () => (
       >
         <h2 className="font-mono text-xs text-primary tracking-widest uppercase mb-4">philosophy</h2>
         <blockquote className="border-l-2 border-primary/40 pl-4 text-muted-foreground italic leading-relaxed">
-          i'd rather ship slow and solid than fast and fragile. every project is an opportunity to build something 
-          that feels precise, calm, and durable — not just "done."
+          Object-oriented programming languages support encapsulation, thereby improving the ability of software to be reused, refined, tested, maintained, and extended.
+          The full benefit of this support can only be realized if encapsulation is maximized during the design process.
         </blockquote>
       </motion.section>
 
