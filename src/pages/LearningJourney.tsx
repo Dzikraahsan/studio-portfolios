@@ -1,27 +1,27 @@
 import PageTransition from "@/components/PageTransition";
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { Code } from "lucide-react";
 
 const experiments = [
   {
-    title: "Shader Playground",
-    description: "Interactive GLSL fragment shader editor with live preview and parameter controls.",
-    status: "active",
+    title: "Learn React.js",
+    description: "Exploring how React works, from its structure to the way everything connects and runs together.",
+    status: "current",
   },
   {
-    title: "Type Racer Clone",
-    description: "Minimalist typing speed test with real-time WPM tracking and leaderboard.",
-    status: "active",
+    title: "Learn Laravel",
+    description: "Exploring the fundamentals of Laravel, from how its structure works to handling routes, views, and simple database integration.",
+    status: "current",
   },
   {
-    title: "CSS Grid Generator",
-    description: "Visual tool for generating complex CSS Grid layouts with copy-paste code output.",
-    status: "wip",
+    title: "Learn JavaScript & TypeScript",
+    description: "Learning the basics of JavaScript and TypeScript, from working with the DOM to understanding state and how everything behaves in a simple application.",
+    status: "current",
   },
   {
-    title: "Motion Gallery",
-    description: "Collection of micro-interaction patterns built with Framer Motion and Spring physics.",
-    status: "active",
+    title: "Learn HTML & CSS",
+    description: "Learning the basics of HTML and CSS, from building simple page structures to styling layouts and understanding how everything comes together on the web.",
+    status: "past",
   },
 ];
 
@@ -29,9 +29,9 @@ const Labs = () => (
   <PageTransition>
     <div className="container pt-32 -mb-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">labs</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">learning journey</h1>
         <p className="text-muted-foreground max-w-lg mb-12">
-          experiments, prototypes, and creative explorations. some polished, some half-baked — all fun.
+          things i'm currently learning, building, and figuring out along the way.
         </p>
       </motion.div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -50,13 +50,13 @@ const Labs = () => (
               </h3>
               <div className="flex items-center gap-2">
                 <span className={`font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full border ${
-                  exp.status === "active" 
+                  exp.status === "current" 
                     ? "text-primary border-primary/30 bg-primary/5" 
                     : "text-muted-foreground border-border bg-secondary"
                 }`}>
                   {exp.status}
                 </span>
-                <ExternalLink size={14} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                <Code size={14} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
               </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">

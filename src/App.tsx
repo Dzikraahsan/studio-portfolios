@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Index from "./pages/Index.tsx";
 import Projects from "./pages/Projects.tsx";
-import Labs from "./pages/Labs.tsx";
+import Labs from "./pages/LearningJourney.tsx";
 import Blog from "./pages/Blog.tsx";
 import Contact from "./pages/Contact.tsx";
 import About from "./pages/About.tsx";
@@ -28,8 +28,8 @@ const AnimatedRoutes = () => {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Index />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/labs" element={<Labs />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/learning-journey" element={<Labs />} />
+          {/* <Route path="/blog" element={<Blog />} /> */}
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
