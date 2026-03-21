@@ -6,9 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const socials = [
-  { icon: Github, label: "GitHub", href: "https://github.com", handle: "@yourname" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com", handle: "in/yourname" },
-  { icon: Mail, label: "Email", href: "mailto:hello@example.com", handle: "hello@example.com" },
+  { icon: Github, label: "GitHub", href: "https://github.com/Dzikraahsan", handle: "@Dzikraahsan" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/dzikra-ahsan-1b2154386?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", handle: "in/Dzikra Ahsan Imawan" },
+  { icon: Mail, label: "Email", href: "mailto:dzikraahsan10@gmail.com", handle: "dzikraahsan10@gmail.com" },
 ];
 
 const Contact = () => {
