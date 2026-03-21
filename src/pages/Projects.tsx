@@ -34,10 +34,10 @@ const allProjects = [
     link: "https://finance-flow-beryl.vercel.app/",
   },
   {
-    title: "Cleanliness assessment",
-    description: "The website is used to assess the cleanliness of the classroom environment.",
-    tags: ["Laravel", "Blade PHP", "MySQL"],
-    link: "https://github.com/Dzikraahsan/penilaian-kebersihan",
+    title: "Text Generate",
+    description: "The website is used to generate text with custom fonts.",
+    tags: ["React", "TypeScript", "Tailwind"],
+    link: "https://text-studio-pro.vercel.app",
   },
 ];
 
