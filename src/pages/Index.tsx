@@ -128,18 +128,11 @@ const Index = () => {
         <section className="py-16 border-t border-border/40">
           <div className="grid gap-4 sm:grid-cols-2">
             <Link
-              to="/labs"
+              to="/learning-journey"
               className="group border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-all duration-300"
             >
-              <h3 className="font-mono text-xs text-primary tracking-widest uppercase mb-2">labs</h3>
-              <p className="text-sm text-muted-foreground">experiments, prototypes, and things i'm tinkering with.</p>
-            </Link>
-            <Link
-              to="/blog"
-              className="group border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-all duration-300"
-            >
-              <h3 className="font-mono text-xs text-primary tracking-widest uppercase mb-2">blog</h3>
-              <p className="text-sm text-muted-foreground">thoughts on development, design, and building things.</p>
+              <h3 className="font-mono text-xs text-primary tracking-widest uppercase mb-2">learning journey</h3>
+              <p className="text-sm text-muted-foreground">things i'm currently learning, building, and figuring out along the way.</p>
             </Link>
           </div>
         </section>
