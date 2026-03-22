@@ -42,6 +42,8 @@ const Blog = () => (
             <img
               src={item.image}
               alt={item.name}
+              decoding="async"
+              loading="lazy"
               className="w-16 h-16 rounded-full object-cover shrink-0"
             />
 
