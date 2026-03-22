@@ -129,10 +129,16 @@ const Index = () => {
           <div className="grid gap-4 sm:grid-cols-2">
             <Link
               to="/learning-journey"
-              className="group border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-all duration-300"
-            >
+              className="group border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-all duration-300" >
               <h3 className="font-mono text-xs text-primary tracking-widest uppercase mb-2">learning journey</h3>
               <p className="text-sm text-muted-foreground">things i'm currently learning, building, and figuring out along the way.</p>
+            </Link>
+
+            <Link
+              to="/legacy"
+              className="group border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-all duration-300" >
+              <h3 className="font-mono text-xs text-primary tracking-widest uppercase mb-2">legacy</h3>
+              <p className="text-sm text-muted-foreground">a glimpse into the people who shaped my journey in programming.</p>
             </Link>
           </div>
         </section>
