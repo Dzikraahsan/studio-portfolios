@@ -6,13 +6,13 @@ const heritage = [
     name: "S****** A****",
     role: "Introduced me to technology, problem solving, and inspired me to be a developer.",
     period: "2004 - Now",
-    image: "https://res.cloudinary.com/da4fjxm1e/image/upload/v1774167956/person_uycbpf.png",
+    image: "https://res.cloudinary.com/da4fjxm1e/image/upload/f_auto,q_auto,w_500/person_uycbpf.png",
   },
   {
     name: "Dzikra Ahsan Imawan",
     role: "Continuing the journey and building my own path",
     period: "2024 – Now",
-    image: "https://res.cloudinary.com/da4fjxm1e/image/upload/v1774168063/Dzikra-foto2_evsxzq.png",
+    image: "https://res.cloudinary.com/da4fjxm1e/image/upload/f_auto,q_auto,w_500/Dzikra-foto2_evsxzq.png",
   },
 ];
 
