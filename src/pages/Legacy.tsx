@@ -21,7 +21,7 @@ const Blog = () => (
     <div className="container pt-32 -mb-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
-          heritage
+          heirtage
         </h1>
         <p className="text-muted-foreground max-w-lg mb-12">
           a glimpse into the people who shaped my journey in programming.
