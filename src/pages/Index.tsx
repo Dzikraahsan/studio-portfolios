@@ -30,7 +30,7 @@ const featuredProjects = [
 const Index = () => {
   return (
     <PageTransition>
-      <div className="container pt-32 -mb-12">
+      <div className="container pt-32 -mb-9">
         {/* Hero */}
         <section className="min-h-[60vh] flex flex-col justify-center">
           <motion.p
