@@ -10,19 +10,19 @@ const featuredProjects = [
   {
     title: "Kaifood",
     description: "A food business website that sells various menus.",
-    tags: ["React", "TypeScript", "Tailwind"],
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
     link: "https://www.kaifood.web.id/",
   },
   {
     title: "Portfolio",
     description: "A personal portfolio that contains information about myself.",
-    tags: ["React", "TypeScript", "Tailwind"],
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
     link: "https://portfoliodzikra.vercel.app/",
   },
   {
     title: "Daily Activity",
     description: "A website used to record daily activities, with several features that can be used.",
-    tags: ["React", "TypeScript", "Tailwind"],
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
     link: "https://tracking-activities.vercel.app/",
   },
 ];

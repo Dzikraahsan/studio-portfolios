@@ -6,17 +6,17 @@ const experiments = [
   {
     title: "Learn React.js",
     description: "Exploring how React works, from its structure to the way everything connects and runs together.",
-    status: "current",
+    status: "present",
   },
   {
     title: "Learn Laravel",
     description: "Exploring the fundamentals of Laravel, from how its structure works to handling routes, views, and simple database integration.",
-    status: "current",
+    status: "present",
   },
   {
     title: "Learn JavaScript & TypeScript",
     description: "Learning the basics of JavaScript and TypeScript, from working with the DOM to understanding state and how everything behaves in a simple application.",
-    status: "current",
+    status: "present",
   },
   {
     title: "Learn HTML & CSS",
@@ -50,7 +50,7 @@ const Labs = () => (
               </h3>
               <div className="flex items-center gap-2">
                 <span className={`font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full border ${
-                  exp.status === "current" 
+                  exp.status === "present" 
                     ? "text-primary border-primary/30 bg-primary/5" 
                     : "text-muted-foreground border-border bg-secondary"
                 }`}>
