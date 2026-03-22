@@ -50,13 +50,13 @@ const Blog = () => (
               <h3 className="font-medium text-foreground group-hover:text-primary transition-colors mb-1">
                 {item.name}
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed justify-text-left">
                 {item.role}
               </p>
             </div>
 
             {/* RIGHT - PERIOD */}
-            <span className="font-mono text-sm text-muted-foreground shrink-0">
+            <span className="font-mono text-[10px] md:text-sm lg:text-sm text-muted-foreground shrink-0">
               {item.period}
             </span>
           </motion.article>

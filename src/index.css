@@ -63,12 +63,19 @@
   }
 }
 
+/* Effect */
 .wave {
   display: inline-block;
   animation: wave 3s infinite;
   transform-origin: 70% 70%;
   color: #90d5ff;
   filter: drop-shadow(0 0 6px #90d5ff);
+}
+
+/* Alignment Text */
+.justify-text-left {
+  text-align: justify;
+  text-align-last: left;
 }
 
 @keyframes wave {
