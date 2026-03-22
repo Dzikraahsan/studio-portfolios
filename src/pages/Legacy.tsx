@@ -5,13 +5,13 @@ const heritage = [
   {
     name: "S****** A****",
     role: "Introduced me to technology, problem solving, and inspired me to be a developer.",
-    period: "2004 - Present",
+    period: "2004 - Now",
     image: "https://res.cloudinary.com/da4fjxm1e/image/upload/v1774167956/person_uycbpf.png",
   },
   {
     name: "Dzikra Ahsan Imawan",
     role: "Continuing the journey and building my own path",
-    period: "2024 – Present",
+    period: "2024 – Now",
     image: "https://res.cloudinary.com/da4fjxm1e/image/upload/v1774168063/Dzikra-foto2_evsxzq.png",
   },
 ];
@@ -52,13 +52,13 @@ const Blog = () => (
               <h3 className="font-medium text-foreground group-hover:text-primary transition-colors mb-1">
                 {item.name}
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed justify-text-left">
+              <p className="text-[12px] text-muted-foreground leading-relaxed justify-text-left">
                 {item.role}
               </p>
             </div>
 
             {/* RIGHT - PERIOD */}
-            <span className="font-mono text-[10px] md:text-sm lg:text-sm text-muted-foreground shrink-0">
+            <span className="font-mono pl-4 text-[10px] md:text-sm lg:text-sm text-muted-foreground shrink-0">
               {item.period}
             </span>
           </motion.article>
