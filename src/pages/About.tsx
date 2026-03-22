@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 
 const skills = [
   { category: "languages", items: ["TypeScript", "JavaScript", "PHP", "Golang", "Python", "Rust"] },
-  { category: "frontend", items: ["Tailwind CSS", "Bootstrap CSS"] },
+  { category: "frontend", items: ["HTML", "CSS","JavaScript"] },
   { category: "backend", items: ["Node.js", "MySQL", "Firebase", "Supabase"] },
-  { category: "framework", items: ["Laravel", "React.js", "Vite", "Next.js"] },
+  { category: "framework", items: ["Laravel", "React.js", "Vite", "Next.js", "Tailwidn CSS", "Bootstrap CSS"] },
   { category: "tools", items: ["Git", "Figma", "Canva"] },
   { category: "gaming", items: ["eFootball", "Clash Of Clans"] },
 ];
