@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import Index from "./pages/Index.tsx";
 import Projects from "./pages/Projects.tsx";
 import Labs from "./pages/LearningJourney.tsx";
-import Blog from "./pages/Blog.tsx";
+import Blog from "./pages/Legacy.tsx";
 import Contact from "./pages/Contact.tsx";
 import About from "./pages/About.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -29,7 +29,7 @@ const AnimatedRoutes = () => {
           <Route path="/" element={<Index />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/learning-journey" element={<Labs />} />
-          {/* <Route path="/blog" element={<Blog />} /> */}
+          <Route path="/legacy" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
@@ -45,9 +45,15 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Navbar />
-        <AnimatedRoutes />
-        <Footer />
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+
+          <main className="flex-1">
+            <AnimatedRoutes />
+          </main>
+
+          <Footer />
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
