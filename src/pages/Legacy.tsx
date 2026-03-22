@@ -49,10 +49,10 @@ const Blog = () => (
 
             {/* CENTER - NAME + ROLE */}
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-foreground group-hover:text-primary transition-colors mb-1">
+              <h3 className="font-medium text-[15px] text-foreground group-hover:text-primary transition-colors mb-1">
                 {item.name}
               </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed justify-text-left">
+              <p className="text-[11px] text-muted-foreground leading-relaxed justify-text-left">
                 {item.role}
               </p>
             </div>
