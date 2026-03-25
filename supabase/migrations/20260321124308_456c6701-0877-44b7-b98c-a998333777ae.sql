@@ -5,7 +5,7 @@ CREATE TABLE public.messages (
   message TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
-
+ 
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Anyone can insert messages" ON public.messages

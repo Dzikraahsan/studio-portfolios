@@ -67,5 +67,5 @@ const Blog = () => (
     </div>
   </PageTransition>
 );
-
+ 
 export default Blog;
