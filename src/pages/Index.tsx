@@ -14,16 +14,16 @@ const featuredProjects = [
     link: "https://www.kaifood.web.id/",
   },
   {
+    title: "Finance",
+    description: "A personal finance website that helps users track their income and expenses.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind", "Supabase"],
+    link: "https://dzii-finance.vercel.app",
+  },
+  {
     title: "Portfolio",
     description: "A personal portfolio that contains information about myself.",
     tags: ["React", "Vite", "TypeScript", "Tailwind"],
     link: "https://portfoliodzikra.vercel.app/",
-  },
-  {
-    title: "Daily Activity",
-    description: "A website used to record daily activities, with several features that can be used.",
-    tags: ["React", "Vite", "TypeScript", "Tailwind"],
-    link: "https://tracking-activities.vercel.app/",
   },
 ];
 

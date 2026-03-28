@@ -16,6 +16,12 @@ const allProjects = [
     link: "https://portfoliodzikra.vercel.app/",
   },
   {
+    title: "Finance",
+    description: "A personal finance website that helps users track their income and expenses.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind", "Supabase"],
+    link: "https://dzii-finance.vercel.app",
+  },
+  {
     title: "Daily Activity",
     description: "A website used to record daily activities, with several features that can be used.",
     tags: ["React", "Vite", "TypeScript", "Tailwind"],
