@@ -1,18 +1,57 @@
 import PageTransition from "@/components/PageTransition";
 import { motion } from "framer-motion";
 
-const skills = [
-  { category: "languages", items: ["TypeScript", "JavaScript", "PHP", "Golang", "Python", "Rust"] },
-  { category: "frontend", items: ["HTML", "CSS","JavaScript"] },
-  { category: "backend", items: ["Node.js", "MySQL", "Firebase", "Supabase"] },
-  { category: "framework", items: ["Laravel", "React.js", "Vite", "Next.js", "Tailwidn CSS", "Bootstrap CSS"] },
-  { category: "tools", items: ["Git", "Figma", "Canva"] },
-  { category: "gaming", items: ["eFootball", "Clash Of Clans"] },
+const tools = [
+
+  // Code Editor
+  { name: "Antigravity", subtitle: "Code Editor", icon: "https://res.cloudinary.com/da4fjxm1e/image/upload/v1775093756/Google-Antigravity-Icon-White_yd3qgp.png" },
+  { name: "Cursor", subtitle: "Code Editor", icon: "https://www.cursor.com/assets/images/logo.svg" },
+  { name: "Zed", subtitle: "Code Editor", icon: "https://res.cloudinary.com/da4fjxm1e/image/upload/v1775092890/zed-logo_sajpzu.png" },
+
+  // Framework
+  { name: "React JS", subtitle: "Framework", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+  { name: "Next JS", subtitle: "Framework", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
+  { name: "Laravel", subtitle: "Framework", icon: "https://cdn.simpleicons.org/laravel/FF2D20" },
+  { name: "Tailwind CSS", subtitle: "Framework", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
+  { name: "Bootstrap", subtitle: "Framework", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" },
+
+  // Language
+  { name: "JavaScript", subtitle: "Language", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+  { name: "TypeScript", subtitle: "Language", icon: "https://cdn.simpleicons.org/typescript/3178C6" },
+  { name: "PHP", subtitle: "Language", icon: "https://cdn.simpleicons.org/php/FFFFFF" },
+  { name: "Python", subtitle: "Language", icon: "https://cdn.simpleicons.org/python/3776AB" },
+
+  // Database
+  { name: "MySQL", subtitle: "Database", icon: "https://cdn.simpleicons.org/mysql/FFFFFF" },
+  { name: "TIDB", subtitle: "Database", icon: "https://cdn.simpleicons.org/databricks/FF3621" },
+  { name: "Firebase", subtitle: "Database", icon: "https://cdn.simpleicons.org/firebase/FFCA28" },
+  { name: "Supabase", subtitle: "Database", icon: "https://cdn.simpleicons.org/supabase/FFFFFF" },
+
+  // JavaScript Runtime
+  { name: "Node JS", subtitle: "JavaScript Runtime", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+
+  // Distributed Version Control System
+  { name: "Git", subtitle: "DVCS", icon: "https://cdn.simpleicons.org/git/FFFFFF" },
+
+  // Repository
+  { name: "GitHub", subtitle: "Repository", icon: "https://cdn.simpleicons.org/github/FFFFFF" },
+
+  // Deployments
+  { name: "Vercel", subtitle: "Deployments", icon: "https://cdn.simpleicons.org/vercel/FFFFFF" },
+  { name: "Railway", subtitle: "Deployments", icon: "https://cdn.simpleicons.org/railway/FFFFFF" },
+
+  // Storage
+  { name: "Cloudinary", subtitle: "Storage", icon: "https://cdn.simpleicons.org/cloudinary/FFFFFF" },
+
+  // Design App
+  { name: "Canva", subtitle: "Design App", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg" },
+  { name: "Figma", subtitle: "Design App", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
+
 ];
 
 const About = () => (
   <PageTransition>
-    <div className="container pt-32 -mb-10 max-w-2xl">
+    <div className="container pt-32 -mb-10 max-w-4xl">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">about</h1>
       </motion.div>
@@ -60,23 +99,24 @@ const About = () => (
         viewport={{ once: true }}
       >
         <h2 className="font-mono text-xs text-primary tracking-widest uppercase mb-6">skills & tools</h2>
-        <div className="grid gap-6 sm:grid-cols-2">
-          {skills.map((group) => (
-            <div key={group.category}>
-              <h3 className="font-mono text-[11px] text-muted-foreground uppercase tracking-wider mb-3">
-                {group.category}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <span
-                    key={item}
-                    className="font-mono text-[11px] px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground border border-border/50"
-                  >
-                    {item}
-                  </span>
-                ))}
+        <div className="grid gap-4 md:gap-4 lg:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {tools.map((tool, i) => (
+            <motion.div
+              key={tool.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-center gap-4 p-3 rounded-xl bg-card border border-border/50 hover:border-primary/40 hover:scale-[1.03] transition-all duration-300"
+            >
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+                <img src={tool.icon} alt={tool.name} className="w-5 h-5" loading="lazy" />
               </div>
-            </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{tool.name}</p>
+                <p className="text-xs text-muted-foreground">{tool.subtitle}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </motion.section>
