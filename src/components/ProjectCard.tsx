@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
-import { ArrowUpRight } from "lucide-react";
 
 interface ProjectCardProps {
-  className: string;
   title: string;
   description: string;
   tags: string[];
@@ -17,7 +15,6 @@ const ProjectCard = ({
   tags,
   link,
   index,
-  className = "",
 }: ProjectCardProps) => (
   <motion.a
     href={link || "#"}
@@ -27,10 +24,9 @@ const ProjectCard = ({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.4, delay: index * 0.08 }}
-    className={`group block h-full w-full rounded-[1.75rem] backdrop-blur border border-border/50 p-0 ${className}`}
+    className="group block border border-border/60 rounded-lg p-6 hover:border-primary/40 hover:glow-border transition-all duration-300"
   >
-    <div className="h-full flex flex-col p-8 rounded-[1.75rem] bg-surface/60 backdrop-blur border border-border/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
-      {/* TOP */}
+    <div className="h-full flex flex-col p-6 rounded-2xl bg-surface/60 backdrop-blur border border-border/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
       <div className="space-y-4">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">
           {title}
@@ -48,7 +44,7 @@ const ProjectCard = ({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="text-[10px] font-mono uppercase tracking-wide px-2 py-1 rounded-md bg-muted text-foreground/75"
+              className="text-[10px] font-mono uppercase tracking-wide px-2 py-1 rounded-md bg-muted text-muted-foreground"
             >
               {tag}
             </span>
@@ -61,7 +57,7 @@ const ProjectCard = ({
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-xs font-mono text-primary hover:underline"
         >
-          visit <ArrowUpRight size={12} />
+          visit
         </a>
       </div>
 

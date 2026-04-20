@@ -6,7 +6,6 @@ import ProjectCard from "@/components/ProjectCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHand } from "@fortawesome/free-solid-svg-icons";
 import LogoLoop from "@/components/LogoLoop";
-import ElectricCard from "@/components/ElectricCard";
 import {
   SiReact,
   SiNextdotjs,
