@@ -19,6 +19,8 @@ const featuredProjects = [
     description: "A food business website that sells various menus.",
     tags: ["React", "Vite", "TypeScript", "Tailwind"],
     link: "https://www.kaifood.web.id/",
+    year: "2024",
+    status: "Completed" as const,
   },
   {
     title: "Finance",
@@ -26,12 +28,16 @@ const featuredProjects = [
       "A personal finance website that helps users track their income and expenses.",
     tags: ["React", "Vite", "TypeScript", "Tailwind", "Supabase"],
     link: "https://dzii-finance.vercel.app",
+    year: "2024",
+    status: "Completed" as const,
   },
   {
     title: "Portfolio",
     description: "A personal portfolio that contains information about myself.",
     tags: ["React", "Vite", "TypeScript", "Tailwind"],
     link: "https://portfoliodzikra.vercel.app/",
+    year: "2024",
+    status: "Completed" as const,
   },
 ];
 
@@ -333,15 +339,9 @@ const Index = () => {
               view all <ArrowRight size={12} />
             </Link>
           </div>
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3 items-stretch">
             {featuredProjects.map((project, i) => (
-              <div className="h-[330px] flex">
-                <ProjectCard
-                  {...project}
-                  index={i}
-                  className="h-full w-full flex flex-col"
-                />
-              </div>
+              <ProjectCard key={project.title} {...project} index={i} />
             ))}
           </div>
         </section>
@@ -373,6 +373,58 @@ const Index = () => {
                 a glimpse into the people who shaped my journey in programming.
               </p>
             </Link>
+          </div>
+        </section>
+
+        {/* Closing Section */}
+        <section className="py-24 border-t border-border/40">
+          <div className="mx-auto max-w-[1100px]">
+            <div className="relative rounded-2xl border border-border/60 bg-surface/40 px-6 py-14 sm:px-12 sm:py-20 overflow-hidden">
+              {/* subtle accent */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 20% 0%, hsl(var(--primary)) 0%, transparent 40%), radial-gradient(circle at 80% 100%, hsl(var(--primary)) 0%, transparent 40%)",
+                }}
+              />
+              <div className="relative flex flex-col items-center text-center">
+                <div className="inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase text-primary mb-6">
+                  <span className="h-px w-8 bg-primary/40" />
+                  let's connect
+                  <span className="h-px w-8 bg-primary/40" />
+                </div>
+
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-5 max-w-2xl">
+                  have an idea worth building?
+                </h2>
+                <p className="text-base text-muted-foreground max-w-xl leading-relaxed mb-10">
+                  i'm always open to interesting projects, collaborations, and
+                  conversations. let's turn your idea into something real.
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:glow-sm transition-all duration-300"
+                  >
+                    get in touch <ArrowRight size={14} />
+                  </Link>
+                  <Link
+                    to="/projects"
+                    className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:border-primary/60 hover:text-primary transition-all duration-300"
+                  >
+                    explore work
+                  </Link>
+                </div>
+
+                <div className="mt-12 h-px w-24 bg-border/60" />
+
+                <p className="mt-6 font-mono text-[11px] tracking-wide text-muted-foreground">
+                  built with care · crafted in code
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </div>
