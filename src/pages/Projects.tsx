@@ -69,18 +69,7 @@ const Projects = () => (
 
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 items-stretch">
         {allProjects.map((project, i) => (
-          <ElectricCard
-            color="#7df9ff"
-            speed={0.4}
-            chaos={0.01}
-            thickness={1}
-            style={{
-              borderRadius: 24,
-              padding: 1,
-            }}
-          >
-            <ProjectCard {...project} index={i} className="h-[320px] w-full" />
-          </ElectricCard>
+          <ProjectCard {...project} index={i} className="h-[320px] w-full" />
         ))}
       </div>
     </div>
