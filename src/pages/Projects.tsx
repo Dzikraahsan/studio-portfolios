@@ -69,7 +69,13 @@ const Projects = () => (
 
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 items-stretch">
         {allProjects.map((project, i) => (
-          <ProjectCard {...project} index={i} className="h-[320px] w-full" />
+          <div className="h-[330px] flex">
+            <ProjectCard
+              {...project}
+              index={i}
+              className="h-full w-full flex flex-col"
+            />
+          </div>
         ))}
       </div>
     </div>
