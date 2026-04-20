@@ -11,6 +11,7 @@ import {
   Type,
   Utensils,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProjectCardProps {
@@ -24,7 +25,7 @@ interface ProjectCardProps {
   status?: "Completed" | "Experimental" | "Archived";
 }
 
-const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+const iconMap: Record<string, LucideIcon> = {
   Kaifood: Utensils,
   Portfolio: User,
   Finance: Wallet,
