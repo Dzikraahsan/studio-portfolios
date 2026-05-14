@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import ProjectCard from "@/components/ProjectCard";
+import ProfileCard from "@/components/ProfileCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHand } from "@fortawesome/free-solid-svg-icons";
 import LogoLoop from "@/components/LogoLoop";
@@ -21,6 +22,15 @@ import {
 } from "react-icons/si";
 
 const featuredProjects = [
+  {
+    title: "Paperjam Club",
+    description:
+      "Paperjam Club is a curated space for makers, players, and storytellers.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
+    link: "",
+    year: "2026",
+    status: "On Working" as const,
+  },
   {
     title: "Kaifood",
     description: "A food business website that sells various menus.",
@@ -35,14 +45,6 @@ const featuredProjects = [
       "A personal finance website that helps users track their income and expenses.",
     tags: ["React", "Vite", "TypeScript", "Tailwind", "Supabase"],
     link: "https://dzii-finance.vercel.app",
-    year: "2024",
-    status: "Completed" as const,
-  },
-  {
-    title: "Portfolio",
-    description: "A personal portfolio that contains information about myself.",
-    tags: ["React", "Vite", "TypeScript", "Tailwind"],
-    link: "https://portfoliodzikra.vercel.app/",
     year: "2024",
     status: "Completed" as const,
   },
@@ -231,53 +233,79 @@ const Index = () => {
     <PageTransition>
       <div className="container pt-[9rem] -mb-0">
         {/* Hero */}
-        <section className="min-h-[60vh] flex flex-col justify-center">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-mono text-xs text-primary mb-4 tracking-widest uppercase"
-          >
-            software engineer
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight mb-6 max-w-2xl"
-          >
-            hi, i'm <span className="text-gradient">Dzikra</span>{" "}
-            <span className="wave">👋</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-8"
-          >
-            i build modern, scalable, and user-focused web applications.
-            passionate about clean code, great design, and solving real problems
-            with technology.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-wrap gap-3"
-          >
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:glow-sm transition-all duration-300"
-            >
-              view projects <ArrowRight size={14} />
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:border-primary/60 hover:text-primary transition-all duration-300"
-            >
-              contact me
-            </Link>
-          </motion.div>
+        <section className="min-h-[60vh] flex flex-col justify-center py-8 md:py-0">
+          <div className="grid gap-14 md:gap-10 md:grid-cols-[1fr_auto] md:items-center">
+            {/* HERO TEXT */}
+            <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="font-mono text-xs text-primary mb-5 tracking-[0.24em] uppercase"
+              >
+                frontend developer
+              </motion.p>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-5xl sm:text-6xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-7 max-w-2xl"
+              >
+                hi, i'm <span className="text-gradient">Dzikra</span>{" "}
+                <span className="wave">👋</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-[15px] sm:text-lg text-muted-foreground max-w-xl leading-[1.9] mb-10"
+              >
+                i build modern, scalable, and user-focused web applications.
+                passionate about clean code, great design, and solving real
+                problems with technology.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-wrap gap-3"
+              >
+                <Link
+                  to="/projects"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl hover:glow-sm transition-all duration-300"
+                >
+                  view projects <ArrowRight size={14} />
+                </Link>
+
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl hover:border-primary/60 hover:text-primary transition-all duration-300"
+                >
+                  contact me
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* PROFILE CARD */}
+            <div className="order-1 md:order-2 flex justify-center md:justify-end w-full">
+              <ProfileCard
+                avatarUrl="https://res.cloudinary.com/da4fjxm1e/image/upload/v1778729787/dzii27-trsnprnt_kvonuu.png"
+                miniAvatarUrl="https://res.cloudinary.com/da4fjxm1e/image/upload/v1778729787/dzii27-trsnprnt_kvonuu.png"
+                name="Dzikra Ahsan"
+                title="Frontend Developer"
+                handle="dzikraahsan"
+                status="Available"
+                contactText="Contact"
+                showUserInfo={false}
+                enableTilt={true}
+                enableMobileTilt={false}
+                className="w-full max-w-[460px] sm:max-w-[500px] md:max-w-[500px]"
+              />
+            </div>
+          </div>
         </section>
 
         {/* LogoLoop */}

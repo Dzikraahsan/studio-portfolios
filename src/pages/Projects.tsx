@@ -4,6 +4,15 @@ import { motion } from "framer-motion";
 
 const allProjects = [
   {
+    title: "Paperjam Club",
+    description:
+      "Paperjam Club is a curated space for makers, players, and storytellers.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
+    link: "",
+    year: "2026",
+    status: "On Working" as const,
+  },
+  {
     title: "Kaifood",
     description: "A food business website that sells various menus.",
     tags: ["React", "Vite", "TypeScript", "Tailwind"],

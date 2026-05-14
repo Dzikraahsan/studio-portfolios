@@ -10,6 +10,9 @@ import {
   LayoutDashboard,
   Type,
   Utensils,
+  Handshake,
+  Network,
+  Earth,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -26,6 +29,7 @@ interface ProjectCardProps {
 }
 
 const iconMap: Record<string, LucideIcon> = {
+  "Paperjam Club": Earth,
   Kaifood: Utensils,
   Portfolio: User,
   Finance: Wallet,
@@ -120,11 +124,11 @@ const ProjectCard = ({
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap items-start gap-x-4 gap-y-3 w-full">
           {tags.map((tag) => (
             <span
               key={tag}
-              className="text-[10px] font-mono uppercase tracking-wide px-2 py-1 rounded-md bg-muted/60 text-muted-foreground border border-border/40"
+              className="shrink-0 whitespace-nowrap text-[10px] font-mono uppercase tracking-wide px-3 py-1.5 rounded-full bg-muted/60 text-muted-foreground border border-border/40"
             >
               {tag}
             </span>
