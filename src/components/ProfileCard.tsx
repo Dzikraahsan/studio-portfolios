@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const TRANSPARENT_PIXEL =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7+Q5QAAAAASUVORK5CYII=";
@@ -113,11 +114,14 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   const wrapRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
 
+  const isMobile = useIsMobile();
+  const tiltActive = enableTilt && !isMobile;
+
   const enterTimerRef = useRef<number | null>(null);
   const leaveRafRef = useRef<number | null>(null);
 
   const tiltEngine = useMemo<TiltEngine | null>(() => {
-    if (!enableTilt) return null;
+    if (!tiltActive) return null;
 
     let rafId: number | null = null;
     let running = false;
@@ -317,7 +321,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   );
 
   useEffect(() => {
-    if (!enableTilt || !tiltEngine) return;
+    if (!tiltActive || !tiltEngine) return;
 
     const shell = shellRef.current;
     if (!shell) return;
@@ -374,7 +378,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
       shell.classList.remove("entering");
     };
   }, [
-    enableTilt,
+    tiltActive,
     enableMobileTilt,
     tiltEngine,
     handlePointerMove,
@@ -513,8 +517,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 ease-out"
           style={{
             background: `radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--behind-glow-color) 0%, transparent var(--behind-glow-size))`,
-            filter: "blur(50px) saturate(1.1)",
-            opacity: "calc(0.8 * var(--card-opacity))",
+            filter: isMobile ? "blur(28px) saturate(1)" : "blur(50px) saturate(1.1)",
+            opacity: isMobile ? "calc(0.45 * var(--card-opacity))" : "calc(0.8 * var(--card-opacity))",
           }}
         />
       )}
@@ -524,8 +528,10 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           className="grid relative overflow-hidden"
           style={{
             width: "100%",
-            height: "clamp(380px, 84vw, 480px)",
-            maxHeight: "480px",
+            height: isMobile
+              ? "clamp(320px, 78vw, 420px)"
+              : "clamp(380px, 84vw, 480px)",
+            maxHeight: isMobile ? "420px" : "480px",
             aspectRatio: "0.84",
             borderRadius: cardRadius,
             backgroundBlendMode: "color-dodge, normal, normal, normal",
@@ -562,9 +568,9 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               gridArea: "1 / -1",
             }}
           >
-            <div style={shineStyle} />
+            {!isMobile && <div style={shineStyle} />}
 
-            <div style={glareStyle} />
+            {!isMobile && <div style={glareStyle} />}
 
             <div
               className="overflow-visible"
