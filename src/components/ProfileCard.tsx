@@ -378,7 +378,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
       shell.classList.remove("entering");
     };
   }, [
-    enableTilt,
+    tiltActive,
     enableMobileTilt,
     tiltEngine,
     handlePointerMove,
