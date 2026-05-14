@@ -250,7 +250,7 @@ const Index = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-5xl sm:text-6xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-7 max-w-2xl"
+                className="text-4xl sm:text-5xl md:text-5xl font-bold leading-[1.05] tracking-tight mb-7 max-w-2xl"
               >
                 hi, i'm <span className="text-gradient">Dzikra</span>{" "}
                 <span className="wave">👋</span>

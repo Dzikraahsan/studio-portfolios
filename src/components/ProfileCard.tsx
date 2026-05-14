@@ -533,9 +533,9 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           style={{
             width: "100%",
             height: isMobile
-              ? "clamp(320px, 78vw, 420px)"
-              : "clamp(380px, 84vw, 480px)",
-            maxHeight: isMobile ? "420px" : "480px",
+              ? "clamp(350px, 79vw, 440px)"
+              : "clamp(400px, 85vw, 500px)",
+            maxHeight: isMobile ? "440px" : "5000px",
             aspectRatio: "0.84",
             borderRadius: cardRadius,
             backgroundBlendMode: "color-dodge, normal, normal, normal",
