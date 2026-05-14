@@ -231,9 +231,9 @@ const toolLogos = tools.map((tool) => ({
 const Index = () => {
   return (
     <PageTransition>
-      <div className="container pt-[9rem] -mb-0">
+      <div className="container pt-28 sm:pt-32 md:pt-36 -mb-0">
         {/* Hero */}
-        <section className="min-h-[60vh] flex flex-col justify-center py-8 md:py-0">
+        <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0">
           <div className="grid gap-14 md:gap-10 md:grid-cols-[1fr_auto] md:items-center">
             {/* HERO TEXT */}
             <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
@@ -313,7 +313,7 @@ const Index = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
-          className="py-16 mt-48 border-t border-border/40 overflow-hidden"
+          className="py-12 md:py-16 mt-16 md:mt-32 border-t border-border/40 overflow-hidden"
         >
           <div
             className="relative w-full overflow-hidden
