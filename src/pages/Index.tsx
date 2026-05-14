@@ -234,7 +234,7 @@ const Index = () => {
       <div className="container pt-28 sm:pt-32 md:pt-36 -mb-0">
         {/* Hero */}
         <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0">
-          <div className="grid gap-14 md:gap-10 md:grid-cols-[1fr_auto] md:items-center">
+          <div className="grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center">
             {/* HERO TEXT */}
             <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
               <motion.p
