@@ -8,7 +8,7 @@ const DEFAULT_ICON_URL = `data:image/svg+xml;utf8,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" fill="none">
     <rect width="600" height="600" fill="transparent"/>
     <g fill="white" fill-opacity="0.62" font-family="monospace" font-weight="700">
-      // <text x="68" y="118" font-size="34">&lt;/&gt;</text>
+      <text x="68" y="118" font-size="34">&lt;/&gt;</text>
       <text x="214" y="92" font-size="26">&lt;/&gt;</text>
       <text x="392" y="138" font-size="30">&lt;/&gt;</text>
       <text x="500" y="238" font-size="24">&lt;/&gt;</text>
