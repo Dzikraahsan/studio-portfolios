@@ -301,50 +301,52 @@ const About = () => (
         </div>
 
         {/* Grouped by category */}
-        <div className="space-y-10">
-          {orderedCategories.map((category, catIndex) => {
-            const items = grouped[category];
-            return (
-              <Reveal key={category} delay={catIndex * 0.04} as="div">
-                <div className="flex items-center gap-3 mb-4">
-                  <h3 className="font-mono text-xs text-primary tracking-widest uppercase whitespace-nowrap">
-                    {category}
-                  </h3>
-                  <div className="flex-1 border-t border-border/30" />
-                  <span className="text-xs text-muted-foreground tabular-nums">
-                    {items.length}
-                  </span>
-                </div>
-                <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                  {items.map((tool, i) => (
-                    <Reveal
-                      key={tool.name}
-                      index={i}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50 hover:border-primary/40 hover:scale-[1.03] transition-all duration-300"
-                    >
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
-                        <img
-                          src={tool.icon}
-                          alt={tool.name}
-                          className="w-5 h-5"
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground truncate">
-                          {tool.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground truncate">
-                          {tool.subtitle}
-                        </p>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+        <section className="-mb-[11rem]">
+          <div className="space-y-10">
+            {orderedCategories.map((category, catIndex) => {
+              const items = grouped[category];
+              return (
+                <Reveal key={category} delay={catIndex * 0.04} as="div">
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="font-mono text-xs text-primary tracking-widest uppercase whitespace-nowrap">
+                      {category}
+                    </h3>
+                    <div className="flex-1 border-t border-border/30" />
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {items.length}
+                    </span>
+                  </div>
+                  <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+                    {items.map((tool, i) => (
+                      <Reveal
+                        key={tool.name}
+                        index={i}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50 hover:border-primary/40 hover:scale-[1.03] transition-all duration-300"
+                      >
+                        <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
+                          <img
+                            src={tool.icon}
+                            alt={tool.name}
+                            className="w-5 h-5"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-foreground truncate">
+                            {tool.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {tool.subtitle}
+                          </p>
+                        </div>
+                      </Reveal>
+                    ))}
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </section>
       </Reveal>
     </div>
   </PageTransition>

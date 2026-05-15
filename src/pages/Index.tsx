@@ -335,10 +335,7 @@ const Index = () => {
         </Reveal>
 
         {/* About Preview */}
-        <Reveal
-          as="section"
-          className="py-16 border-t border-border/40"
-        >
+        <Reveal as="section" className="py-16 border-t border-border/40">
           <h2 className="font-mono text-xs text-primary tracking-widest uppercase mb-6">
             about
           </h2>
@@ -473,7 +470,7 @@ const Index = () => {
         </section>
 
         {/* Closing Section */}
-        <section className="py-24 border-t border-border/40">
+        <section className="pt-32 -mb-8 border-t border-border/40">
           <div className="mx-auto max-w-[1100px]">
             <div className="relative rounded-2xl border border-border/60 bg-surface/40 px-6 py-14 sm:px-12 sm:py-20 overflow-hidden">
               {/* subtle accent */}
