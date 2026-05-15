@@ -5,8 +5,9 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { to: "/", label: "home" },
+  { to: "/about", label: "about" },
   { to: "/projects", label: "projects" },
-  { to: "/learning-journey", label: "learning journey" },
+  { to: "/journey", label: "journey" },
   { to: "/legacy", label: "legacy" },
   { to: "/contact", label: "contact" },
 ];
@@ -19,7 +20,10 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container flex items-center justify-between h-14">
-          <Link to="/" className="font-mono text-sm font-semibold tracking-tight text-foreground hover:text-primary transition-colors">
+          <Link
+            to="/"
+            className="font-mono text-sm font-semibold tracking-tight text-foreground hover:text-primary transition-colors"
+          >
             Dzii<span className="text-primary">27</span>
           </Link>
 

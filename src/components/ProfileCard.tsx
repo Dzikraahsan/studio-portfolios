@@ -55,6 +55,10 @@ if (typeof document !== "undefined" && !document.getElementById(KEYFRAMES_ID)) {
       0% { background-position: 0 var(--background-y), 0 0, center; }
       100% { background-position: 0 var(--background-y), 90% 90%, center; }
     }
+    @keyframes pc-holo-bg-mobile {
+      0% { background-position: 0 0%, 0 0, center; }
+      100% { background-position: 0 100%, 90% 90%, center; }
+    }
   `;
   document.head.appendChild(style);
 }
@@ -234,7 +238,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         lastTs = 0;
       },
     };
-  }, [enableTilt]);
+  }, [tiltActive]);
 
   const getOffsets = (
     evt: PointerEvent,
@@ -303,14 +307,10 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
 
       const centerX = shell.clientWidth / 2;
       const centerY = shell.clientHeight / 2;
-      const x = clamp(
-        centerX + gamma * mobileTiltSensitivity,
-        0,
-        shell.clientWidth,
-      );
+      const sensitivity = mobileTiltSensitivity * 0.6;
+      const x = clamp(centerX + gamma * sensitivity, 0, shell.clientWidth);
       const y = clamp(
-        centerY +
-          (beta - ANIMATION_CONFIG.DEVICE_BETA_OFFSET) * mobileTiltSensitivity,
+        centerY + (beta - ANIMATION_CONFIG.DEVICE_BETA_OFFSET) * sensitivity,
         0,
         shell.clientHeight,
       );
@@ -434,71 +434,130 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
     onContactClick?.();
   }, [onContactClick]);
 
-  const shineStyle: React.CSSProperties = {
-    maskImage: "var(--icon)",
-    maskMode: "luminance",
-    maskRepeat: "repeat",
-    maskSize: "118%",
-    maskPosition:
-      "top calc(200% - (var(--background-y) * 5)) left calc(100% - var(--background-x))",
-    filter:
-      "brightness(1.08) contrast(1.55) saturate(1.05) opacity(0.72) drop-shadow(0 0 7px rgba(120, 200, 255, 0.42))",
-    animation: "pc-holo-bg 14s linear infinite",
-    animationPlayState: "running",
-    mixBlendMode: "color-dodge",
-    transform: "translate3d(0, 0, 1px)",
-    overflow: "hidden",
-    zIndex: 3,
-    background: "transparent",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundImage: `
-      repeating-linear-gradient(
-        0deg,
-        var(--sunpillar-clr-1) 5%,
-        var(--sunpillar-clr-2) 10%,
-        var(--sunpillar-clr-3) 15%,
-        var(--sunpillar-clr-4) 20%,
-        var(--sunpillar-clr-5) 25%,
-        var(--sunpillar-clr-6) 30%,
-        var(--sunpillar-clr-1) 35%
-      ),
-      repeating-linear-gradient(
-        -45deg,
-        #0e152e 0%,
-        hsl(180, 10%, 60%) 3.8%,
-        hsl(180, 29%, 66%) 4.5%,
-        hsl(180, 10%, 60%) 5.2%,
-        #0e152e 10%,
-        #0e152e 12%
-      ),
-      radial-gradient(
-        farthest-corner circle at var(--pointer-x) var(--pointer-y),
-        hsla(0, 0%, 0%, 0.1) 12%,
-        hsla(0, 0%, 0%, 0.15) 20%,
-        hsla(0, 0%, 0%, 0.25) 120%
-      )
-    `.replace(/\s+/g, " "),
-    gridArea: "1 / -1",
-    borderRadius: cardRadius,
-    pointerEvents: "none",
-  };
+  const shineStyle: React.CSSProperties = useMemo(
+    () => ({
+      maskImage: "var(--icon)",
+      maskMode: "luminance",
+      maskRepeat: "repeat",
+      maskSize: "118%",
+      maskPosition:
+        "top calc(200% - (var(--background-y) * 5)) left calc(100% - var(--background-x))",
+      filter: isMobile
+        ? "brightness(1.04) contrast(1.3) saturate(1.0) opacity(0.55)"
+        : "brightness(1.08) contrast(1.55) saturate(1.05) opacity(0.72) drop-shadow(0 0 7px rgba(120, 200, 255, 0.42))",
+      animation: isMobile
+        ? "pc-holo-bg-mobile 18s linear infinite"
+        : "pc-holo-bg 14s linear infinite",
+      animationPlayState: "running",
+      mixBlendMode: "color-dodge",
+      transform: "translate3d(0, 0, 1px)",
+      overflow: "hidden",
+      zIndex: 3,
+      background: "transparent",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundImage: isMobile
+        ? `
+        repeating-linear-gradient(
+          0deg,
+          var(--sunpillar-clr-1) 5%,
+          var(--sunpillar-clr-2) 10%,
+          var(--sunpillar-clr-3) 15%,
+          var(--sunpillar-clr-4) 20%,
+          var(--sunpillar-clr-5) 25%,
+          var(--sunpillar-clr-6) 30%,
+          var(--sunpillar-clr-1) 35%
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          #0e152e 0%,
+          hsl(180, 10%, 60%) 3.8%,
+          hsl(180, 29%, 66%) 4.5%,
+          hsl(180, 10%, 60%) 5.2%,
+          #0e152e 10%,
+          #0e152e 12%
+        ),
+        radial-gradient(
+          farthest-corner circle at 50% 50%,
+          hsla(0, 0%, 0%, 0.1) 12%,
+          hsla(0, 0%, 0%, 0.15) 20%,
+          hsla(0, 0%, 0%, 0.25) 120%
+        )
+      `.replace(/\s+/g, " ")
+        : `
+        repeating-linear-gradient(
+          0deg,
+          var(--sunpillar-clr-1) 5%,
+          var(--sunpillar-clr-2) 10%,
+          var(--sunpillar-clr-3) 15%,
+          var(--sunpillar-clr-4) 20%,
+          var(--sunpillar-clr-5) 25%,
+          var(--sunpillar-clr-6) 30%,
+          var(--sunpillar-clr-1) 35%
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          #0e152e 0%,
+          hsl(180, 10%, 60%) 3.8%,
+          hsl(180, 29%, 66%) 4.5%,
+          hsl(180, 10%, 60%) 5.2%,
+          #0e152e 10%,
+          #0e152e 12%
+        ),
+        radial-gradient(
+          farthest-corner circle at var(--pointer-x) var(--pointer-y),
+          hsla(0, 0%, 0%, 0.1) 12%,
+          hsla(0, 0%, 0%, 0.15) 20%,
+          hsla(0, 0%, 0%, 0.25) 120%
+        )
+      `.replace(/\s+/g, " "),
+      gridArea: "1 / -1",
+      borderRadius: cardRadius,
+      pointerEvents: "none",
+      willChange: "background-position",
+    }),
+    [isMobile, cardRadius],
+  );
 
-  const glareStyle: React.CSSProperties = {
-    transform: "translate3d(0, 0, 1.1px)",
-    overflow: "hidden",
-    backgroundImage: `radial-gradient(
-      farthest-corner circle at var(--pointer-x) var(--pointer-y),
-      hsl(248, 25%, 80%) 12%,
-      hsla(207, 40%, 30%, 0.8) 90%
-    )`,
-    mixBlendMode: "overlay",
-    filter: "brightness(0.8) contrast(1.2)",
-    zIndex: 4,
-    gridArea: "1 / -1",
-    borderRadius: cardRadius,
-    pointerEvents: "none",
-  };
+  const glareStyle: React.CSSProperties = useMemo(
+    () => ({
+      transform: "translate3d(0, 0, 1.1px)",
+      overflow: "hidden",
+      backgroundImage: isMobile
+        ? `radial-gradient(
+          farthest-corner circle at 50% 30%,
+          hsl(248, 20%, 75%) 12%,
+          hsla(207, 35%, 28%, 0.6) 90%
+        )`
+        : `radial-gradient(
+          farthest-corner circle at var(--pointer-x) var(--pointer-y),
+          hsl(248, 25%, 80%) 12%,
+          hsla(207, 40%, 30%, 0.8) 90%
+        )`,
+      mixBlendMode: "overlay",
+      filter: isMobile
+        ? "brightness(0.65) contrast(1.1)"
+        : "brightness(0.8) contrast(1.2)",
+      opacity: isMobile ? 0.6 : 1,
+      zIndex: 4,
+      gridArea: "1 / -1",
+      borderRadius: cardRadius,
+      pointerEvents: "none",
+    }),
+    [isMobile, cardRadius],
+  );
+
+  const sectionBoxShadow = isMobile
+    ? "rgba(0, 0, 0, 0.6) 0px 8px 16px -4px"
+    : "rgba(0, 0, 0, 0.8) calc((var(--pointer-from-left) * 10px) - 3px) calc((var(--pointer-from-top) * 20px) - 6px) 20px -5px";
+
+  const parallaxTranslate = isMobile
+    ? "translate3d(0, 0, 0.1px)"
+    : "translate3d(calc(var(--pointer-from-left) * -6px + 3px), calc(var(--pointer-from-top) * -6px + 3px), 0.1px)";
+
+  const avatarTranslate = isMobile
+    ? "translateX(-50%) translateZ(0)"
+    : "translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 2px)) translateZ(0)";
 
   return (
     <div
@@ -506,7 +565,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
       className={`relative touch-none ${className}`.trim()}
       style={
         {
-          perspective: "500px",
+          perspective: isMobile ? "800px" : "500px",
           transform: "translate3d(0, 0, 0.1px)",
           ...cardStyle,
         } as React.CSSProperties
@@ -516,13 +575,13 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         <div
           className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 ease-out"
           style={{
-            background: `radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--behind-glow-color) 0%, transparent var(--behind-glow-size))`,
+            background: isMobile
+              ? `radial-gradient(circle at 50% 40%, var(--behind-glow-color) 0%, transparent var(--behind-glow-size))`
+              : `radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--behind-glow-color) 0%, transparent var(--behind-glow-size))`,
             filter: isMobile
-              ? "blur(28px) saturate(1)"
+              ? "blur(20px) saturate(0.9)"
               : "blur(50px) saturate(1.1)",
-            opacity: isMobile
-              ? "calc(0.45 * var(--card-opacity))"
-              : "calc(0.8 * var(--card-opacity))",
+            opacity: isMobile ? 0.28 : "calc(0.8 * var(--card-opacity))",
           }}
         />
       )}
@@ -539,28 +598,37 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             aspectRatio: "0.84",
             borderRadius: cardRadius,
             backgroundBlendMode: "color-dodge, normal, normal, normal",
-            boxShadow:
-              "rgba(0, 0, 0, 0.8) calc((var(--pointer-from-left) * 10px) - 3px) calc((var(--pointer-from-top) * 20px) - 6px) 20px -5px",
-            transition: "transform 1s ease",
+            boxShadow: sectionBoxShadow,
+            transition: isMobile ? "none" : "transform 1s ease",
             transform: "translateZ(0) rotateX(0deg) rotateY(0deg)",
             background: "rgba(0, 0, 0, 0.9)",
             backfaceVisibility: "hidden",
+            willChange: isMobile ? "auto" : "transform",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transition = "none";
-            e.currentTarget.style.transform =
-              "translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x))";
-          }}
-          onMouseLeave={(e) => {
-            const shell = shellRef.current;
-            if (shell?.classList.contains("entering")) {
-              e.currentTarget.style.transition = "transform 180ms ease-out";
-            } else {
-              e.currentTarget.style.transition = "transform 1s ease";
-            }
-            e.currentTarget.style.transform =
-              "translateZ(0) rotateX(0deg) rotateY(0deg)";
-          }}
+          onMouseEnter={
+            isMobile
+              ? undefined
+              : (e) => {
+                  e.currentTarget.style.transition = "none";
+                  e.currentTarget.style.transform =
+                    "translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x))";
+                }
+          }
+          onMouseLeave={
+            isMobile
+              ? undefined
+              : (e) => {
+                  const shell = shellRef.current;
+                  if (shell?.classList.contains("entering")) {
+                    e.currentTarget.style.transition =
+                      "transform 180ms ease-out";
+                  } else {
+                    e.currentTarget.style.transition = "transform 1s ease";
+                  }
+                  e.currentTarget.style.transform =
+                    "translateZ(0) rotateX(0deg) rotateY(0deg)";
+                }
+          }
         >
           <div
             className="absolute inset-0"
@@ -572,9 +640,9 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               gridArea: "1 / -1",
             }}
           >
-            {!isMobile && <div style={shineStyle} />}
+            <div style={shineStyle} />
 
-            {!isMobile && <div style={glareStyle} />}
+            <div style={glareStyle} />
 
             <div
               className="overflow-visible"
@@ -589,15 +657,15 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               }}
             >
               <img
-                className="absolute inset-x-0 bottom-0 h-full w-full object-contain object-bottom will-change-transform transition-transform duration-[120ms] ease-out"
+                className="absolute inset-x-0 bottom-0 h-full w-full object-contain object-bottom will-change-transform"
                 src={avatarUrl}
                 alt={`${name || "User"} avatar`}
                 loading="lazy"
                 style={{
                   filter: "none",
                   transformOrigin: "50% 100%",
-                  transform:
-                    "translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 2px)) translateZ(0)",
+                  transform: avatarTranslate,
+                  transition: isMobile ? "none" : "transform 120ms ease-out",
                   borderRadius: cardRadius,
                   backfaceVisibility: "hidden",
                   left: "50%",
@@ -612,8 +680,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             <div
               className="max-h-full overflow-hidden text-center relative z-[5]"
               style={{
-                transform:
-                  "translate3d(calc(var(--pointer-from-left) * -6px + 3px), calc(var(--pointer-from-top) * -6px + 3px), 0.1px)",
+                transform: parallaxTranslate,
                 mixBlendMode: "luminosity",
                 gridArea: "1 / -1",
                 borderRadius: cardRadius,
