@@ -234,6 +234,15 @@ const Index = () => {
     <PageTransition>
       <div className="container pt-28 sm:pt-32 md:pt-36 -mb-0">
         {/* Hero */}
+        <div className="flex items-center gap-3 mb-6 -mt-4">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            / index
+          </span>
+          <span className="h-px flex-1 max-w-[80px] bg-border/60" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            homepage
+          </span>
+        </div>
         <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0">
           <div className="grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center">
             {/* HERO TEXT */}

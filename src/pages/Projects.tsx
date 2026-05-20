@@ -104,12 +104,12 @@ const activeCount = allProjects.filter((p) => p.status === "On Working").length;
 
 const Projects = () => (
   <PageTransition>
-    <div className="container pt-28 sm:pt-32 pb-16">
+    <div className="container pt-28 sm:pt-32 -mb-8">
       {/* Header */}
       <Reveal>
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-8">
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
-            / index
+            / projects
           </span>
           <span className="h-px flex-1 max-w-[80px] bg-border/60" />
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">

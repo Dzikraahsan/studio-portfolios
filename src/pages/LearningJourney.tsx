@@ -87,6 +87,15 @@ const Labs = () => (
   <PageTransition>
     <div className="container pt-32 -mb-8">
       <Reveal>
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            / journey
+          </span>
+          <span className="h-px flex-1 max-w-[80px] bg-border/60" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            roadmap
+          </span>
+        </div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
           learning journey
         </h1>

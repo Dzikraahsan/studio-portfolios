@@ -149,6 +149,15 @@ const Legacy = () => (
   <PageTransition>
     <div className="container pt-32 -mb-8">
       <Reveal>
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            / legacy
+          </span>
+          <span className="h-px flex-1 max-w-[80px] bg-border/60" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            heirtage
+          </span>
+        </div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
           legacy
         </h1>
@@ -162,11 +171,7 @@ const Legacy = () => (
         {sections.map((section, sIdx) => {
           const SectionIcon = section.icon;
           return (
-            <Reveal
-              as="section"
-              key={section.id}
-              index={sIdx}
-            >
+            <Reveal as="section" key={section.id} index={sIdx}>
               {/* Section header */}
               <div className="flex items-start gap-3 mb-5">
                 <div className="shrink-0 w-9 h-9 rounded-lg bg-secondary/60 border border-border/60 flex items-center justify-center">

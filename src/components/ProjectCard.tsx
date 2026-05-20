@@ -82,7 +82,6 @@ const ProjectCard = ({
         featured ? "md:p-2" : ""
       } ${className}`}
     >
-      {/* Top accent line */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-500 md:group-hover:opacity-100" />
 
       <div
@@ -92,7 +91,6 @@ const ProjectCard = ({
             : ""
         }`}
       >
-        {/* Header */}
         <div
           className={`flex items-start justify-between gap-4 px-5 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5 ${
             featured
@@ -129,16 +127,13 @@ const ProjectCard = ({
           />
         </div>
 
-        {/* Body */}
         <div className={`flex flex-1 flex-col ${featured ? "lg:flex-1" : ""}`}>
-          {/* Divider — hidden on featured horizontal layout */}
           <div
             className={`mx-5 sm:mx-6 h-px bg-border/50 ${
               featured ? "lg:hidden" : ""
             }`}
           />
 
-          {/* Description */}
           <div
             className={`px-5 sm:px-6 py-4 sm:py-5 ${featured ? "lg:py-6" : ""}`}
           >

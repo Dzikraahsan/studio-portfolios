@@ -177,9 +177,18 @@ const approachItems = [
 
 const About = () => (
   <PageTransition>
-    <div className="container pt-32 max-w-4xl pb-24">
+    <div className="container pt-32 pb-24">
       {/* Header */}
       <Reveal>
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            / about
+          </span>
+          <span className="h-px flex-1 max-w-[80px] bg-border/60" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+            personal
+          </span>
+        </div>
         <div className="mb-2">
           <span className="font-mono text-xs text-primary tracking-widest uppercase">
             profile
@@ -188,7 +197,7 @@ const About = () => (
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
           about
         </h1>
-        <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
+        <p className="text-muted-foreground text-sm max-w-xl leading-relaxed">
           software engineer · frontend developer · design & engineering
           intersection
         </p>

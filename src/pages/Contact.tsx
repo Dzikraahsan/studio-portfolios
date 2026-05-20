@@ -108,10 +108,17 @@ const Contact = () => {
   return (
     <PageTransition>
       <div className="container pt-32 -mb-8">
-        {/* Two-column grid: left = existing content, right = info panel */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* ── LEFT COLUMN (unchanged content) ─────────────────────── */}
           <Reveal className="max-w-xl w-full">
+            <div className="flex items-center gap-3 mb-8">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+                / contact
+              </span>
+              <span className="h-px flex-1 max-w-[80px] bg-border/60" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+                message me
+              </span>
+            </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
               let's talk
             </h1>
@@ -120,7 +127,6 @@ const Contact = () => {
               love to hear from you.
             </p>
 
-            {/* Social Links */}
             <div className="flex flex-col gap-3 mb-16">
               {socials.map((s, i) => (
                 <Reveal
@@ -143,7 +149,6 @@ const Contact = () => {
               ))}
             </div>
 
-            {/* Contact Form */}
             <Reveal delay={0.15}>
               <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <h2 className="font-mono text-xs text-primary tracking-widest uppercase mb-2">
@@ -181,11 +186,8 @@ const Contact = () => {
             </Reveal>
           </Reveal>
 
-          {/* RIGHT COLUMN */}
           <Reveal delay={0.2} className="w-full lg:pt-[3.75rem]">
-            {/* Sticky wrapper */}
             <div className="lg:sticky lg:top-32 flex flex-col gap-6">
-              {/* Header accent */}
               <div>
                 <span className="font-mono text-xs text-primary tracking-widest uppercase">
                   quick info
@@ -193,7 +195,6 @@ const Contact = () => {
                 <div className="mt-3 h-px w-12 bg-primary/40" />
               </div>
 
-              {/* Highlight cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
                 {highlights.map((item, i) => (
                   <Reveal
@@ -223,10 +224,8 @@ const Contact = () => {
                 ))}
               </div>
 
-              {/* Divider */}
               <div className="h-px w-full bg-border/30" />
 
-              {/* Let's connect blurb */}
               <Reveal delay={0.55}>
                 <div className="flex items-start gap-3">
                   <div className="mt-1 shrink-0 w-7 h-7 rounded-md border border-border/60 flex items-center justify-center">
@@ -244,7 +243,6 @@ const Contact = () => {
                 </div>
               </Reveal>
 
-              {/* Subtle status pill */}
               <Reveal delay={0.65}>
                 <div className="inline-flex items-center gap-2 border border-border/40 rounded-full px-3.5 py-1.5 w-fit">
                   <span className="relative flex h-2 w-2">
