@@ -1,5 +1,6 @@
 import PageTransition from "@/components/PageTransition";
 import Reveal from "@/components/Reveal";
+import { Code2, Layers3, Database, Wrench } from "lucide-react";
 
 const tools = [
   {
@@ -305,62 +306,180 @@ const About = () => (
           skills & tools
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-20">
-          {[
-            { label: "Languages", count: grouped["Language"]?.length ?? 0 },
-            { label: "Frameworks", count: grouped["Framework"]?.length ?? 0 },
-            { label: "Databases", count: grouped["Database"]?.length ?? 0 },
-            { label: "Total Tools", count: tools.length },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-xl bg-card border border-border/50 p-4 flex flex-col gap-1"
-            >
-              <span className="text-2xl font-bold text-foreground">
-                {stat.count}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {stat.label}
-              </span>
-            </div>
-          ))}
+          {(
+            [
+              {
+                label: "Languages",
+                count: grouped["Language"]?.length ?? 0,
+                icon: Code2,
+                description: "Core languages used",
+                accent: "from-sky-500/20 to-transparent",
+                glow: "hover:shadow-sky-500/10",
+                iconColor: "text-sky-400",
+                borderAccent: "hover:border-sky-500/40",
+              },
+              {
+                label: "Frameworks",
+                count: grouped["Framework"]?.length ?? 0,
+                icon: Layers3,
+                description: "Libraries & runtimes",
+                accent: "from-violet-500/20 to-transparent",
+                glow: "hover:shadow-violet-500/10",
+                iconColor: "text-violet-400",
+                borderAccent: "hover:border-violet-500/40",
+              },
+              {
+                label: "Databases",
+                count: grouped["Database"]?.length ?? 0,
+                icon: Database,
+                description: "Storage solutions",
+                accent: "from-emerald-500/20 to-transparent",
+                glow: "hover:shadow-emerald-500/10",
+                iconColor: "text-emerald-400",
+                borderAccent: "hover:border-emerald-500/40",
+              },
+              {
+                label: "Total Tools",
+                count: tools.length,
+                icon: Wrench,
+                description: "Across all categories",
+                accent: "from-amber-500/20 to-transparent",
+                glow: "hover:shadow-amber-500/10",
+                iconColor: "text-amber-400",
+                borderAccent: "hover:border-amber-500/40",
+              },
+            ] as const
+          ).map(
+            ({
+              label,
+              count,
+              icon: Icon,
+              description,
+              accent,
+              glow,
+              iconColor,
+              borderAccent,
+            }) => (
+              <div
+                key={label}
+                className={[
+                  "group relative rounded-xl bg-card border border-border/50 p-4 flex flex-col gap-3 overflow-hidden",
+                  "transition-all duration-300 ease-out",
+                  "hover:-translate-y-0.5 hover:shadow-lg",
+                  glow,
+                  borderAccent,
+                ].join(" ")}
+              >
+                {/* Top accent line */}
+                <div
+                  className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${accent}`}
+                />
+
+                {/* Radial background glow */}
+                <div
+                  className={`absolute -top-6 -right-6 w-20 h-20 rounded-full bg-gradient-to-br ${accent} opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500`}
+                />
+
+                {/* Corner accent */}
+                <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-border/60 group-hover:bg-current transition-colors duration-300" />
+
+                {/* Icon */}
+                <div
+                  className={`w-7 h-7 rounded-md bg-border/20 flex items-center justify-center ${iconColor} transition-transform duration-300 group-hover:scale-110`}
+                >
+                  <Icon size={14} strokeWidth={1.8} />
+                </div>
+
+                {/* Count */}
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-3xl font-bold text-foreground leading-none tracking-tight tabular-nums">
+                    {count}
+                  </span>
+
+                  {/* Label + description */}
+                  <span className="text-sm font-medium text-foreground/80 leading-snug mt-1.5">
+                    {label}
+                  </span>
+                  <span className="text-xs text-muted-foreground leading-snug">
+                    {description}
+                  </span>
+                </div>
+
+                {/* Bottom decorative line */}
+                <div
+                  className={`absolute inset-x-0 bottom-0 h-px bg-gradient-to-r ${accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                />
+              </div>
+            ),
+          )}
         </div>
 
         {/* Grouped by category */}
         <section className="-mb-[11rem]">
-          <div className="space-y-16 mt-4">
+          <div className="space-y-12 mt-4">
             {orderedCategories.map((category, catIndex) => {
               const items = grouped[category];
               return (
                 <Reveal key={category} delay={catIndex * 0.04} as="div">
-                  <div className="flex items-center gap-3 mb-4">
-                    <h3 className="font-mono text-xs text-primary tracking-widest uppercase whitespace-nowrap">
-                      {category}
-                    </h3>
-                    <div className="flex-1 border-t border-border/30" />
-                    <span className="text-xs text-muted-foreground tabular-nums">
-                      {items.length}
-                    </span>
+                  {/* Category Header */}
+                  <div className="relative mb-5">
+                    <div className="flex items-center gap-3">
+                      {/* Accent dot */}
+                      <div className="w-1 h-4 rounded-full bg-primary/60 flex-shrink-0" />
+
+                      <h3 className="font-mono text-xs text-primary tracking-widest uppercase whitespace-nowrap">
+                        {category}
+                      </h3>
+
+                      {/* Divider */}
+                      <div className="flex-1 border-t border-border/30" />
+
+                      {/* Count badge */}
+                      <span className="inline-flex items-center justify-center min-w-[1.5rem] h-5 px-1.5 rounded-md bg-primary/10 border border-primary/20 text-[10px] font-mono text-primary tabular-nums">
+                        {items.length}
+                      </span>
+                    </div>
                   </div>
-                  <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+
+                  {/* Tool Cards Grid */}
+                  <div className="flex flex-wrap justify-center sm:justify-start lg:justify-center gap-2">
                     {items.map((tool, i) => (
                       <Reveal
                         key={tool.name}
                         index={i}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50 hover:border-primary/40 hover:scale-[1.03] transition-all duration-300"
+                        className={[
+                          "group relative flex items-center gap-3 p-3 rounded-xl",
+                          "w-[calc(50%-0.25rem)] sm:w-[calc(33.333%-0.375rem)] lg:w-[calc(25%-0.375rem)]",
+                          "bg-card border border-border/50",
+                          "hover:border-primary/40 hover:bg-card/80",
+                          "hover:shadow-md hover:shadow-primary/5",
+                          "hover:-translate-y-0.5",
+                          "transition-all duration-300 ease-out",
+                          "overflow-hidden",
+                        ].join(" ")}
                       >
-                        <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
+                        {/* Hover glow */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-primary/[0.04] to-transparent transition-opacity duration-300 pointer-events-none rounded-xl" />
+
+                        {/* Top accent line on hover */}
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary/40 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                        {/* Icon container */}
+                        <div className="relative flex-shrink-0 w-10 h-10 rounded-lg bg-secondary border border-border/40 group-hover:border-primary/20 flex items-center justify-center transition-colors duration-300">
                           <img
                             src={tool.icon}
                             alt={tool.name}
-                            className="w-5 h-5"
+                            className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
                             loading="lazy"
                           />
                         </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-foreground truncate">
+
+                        {/* Text */}
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-foreground truncate leading-tight">
                             {tool.name}
                           </p>
-                          <p className="text-xs text-muted-foreground truncate">
+                          <p className="text-[11px] text-muted-foreground truncate mt-0.5 leading-tight">
                             {tool.subtitle}
                           </p>
                         </div>
