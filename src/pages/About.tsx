@@ -98,6 +98,11 @@ const tools = [
     icon: "https://cdn.simpleicons.org/git/FFFFFF",
   },
   {
+    name: "TanStack",
+    subtitle: "Library",
+    icon: "https://cdn.simpleicons.org/tanstack/white",
+  },
+  {
     name: "GitHub",
     subtitle: "Repository",
     icon: "https://cdn.simpleicons.org/github/FFFFFF",
@@ -111,6 +116,16 @@ const tools = [
     name: "Railway",
     subtitle: "Deployments",
     icon: "https://cdn.simpleicons.org/railway/FFFFFF",
+  },
+  {
+    name: "Netlify",
+    subtitle: "Deployments",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/netlify/netlify-original.svg",
+  },
+  {
+    name: "Cloudflare Pages",
+    subtitle: "Deployments",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cloudflare/cloudflare-original.svg",
   },
   {
     name: "Cloudinary",
@@ -138,16 +153,17 @@ const grouped = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
 }, {});
 
 const categoryOrder = [
-  "Code Editor",
   "Language",
   "Framework",
+  "Deployments",
   "Database",
+  "Code Editor",
+  "Design App",
   "JavaScript Runtime",
   "DVCS",
+  "Library",
   "Repository",
-  "Deployments",
   "Storage",
-  "Design App",
 ];
 
 const orderedCategories = categoryOrder.filter((c) => grouped[c]);
