@@ -32,9 +32,9 @@ const allProjects: Project[] = [
   },
   {
     title: "Portfolio",
-    description: "A personal portfolio that contains information about myself.",
+    description: "A personal page that contains information about myself.",
     tags: ["React", "Vite", "TypeScript", "Tailwind"],
-    link: "https://portfoliodzikra.vercel.app/",
+    link: "https://dzii27-page.vercel.app",
     year: "2024",
     status: "Completed",
   },

@@ -45,17 +45,48 @@ export function ScrollToTopButton() {
       onClick={scrollToTop}
       className={cn(
         "fixed z-50 flex items-center justify-center rounded-full",
-        "border border-border bg-card/90 backdrop-blur-xl",
-        "shadow-lg transition-all duration-300 ease-out",
-        "hover:bg-primary hover:text-primary-foreground hover:shadow-xl hover:scale-105",
+        "border border-white/[0.08] bg-background/60 backdrop-blur-2xl",
+        "shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_4px_24px_rgba(0,0,0,0.4),0_1px_4px_rgba(0,0,0,0.3)]",
+        "transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+        "group cursor-pointer",
+        "hover:-translate-y-0.5 hover:scale-105",
+        "hover:border-white/[0.14]",
+        "hover:bg-primary/10",
+        "hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.5),0_2px_8px_rgba(0,0,0,0.3),0_0_20px_hsl(var(--primary)/0.12)]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "bottom-5 right-4 size-10 md:bottom-8 md:right-8 md:size-11",
         visible
           ? "translate-y-0 opacity-100 pointer-events-auto"
-          : "translate-y-3 opacity-0 pointer-events-none",
+          : "translate-y-4 opacity-0 pointer-events-none",
       )}
     >
-      <ArrowUp className="size-4 md:size-5" />
+      {/* Layered inner highlight */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-0 rounded-full",
+          "bg-gradient-to-b from-white/[0.06] to-transparent",
+        )}
+      />
+
+      {/* Soft primary glow ring */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-0 rounded-full opacity-0",
+          "bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.15)_0%,transparent_70%)]",
+          "transition-opacity duration-500 group-hover:opacity-100",
+        )}
+      />
+
+      <ArrowUp
+        className={cn(
+          "relative size-4 md:size-[18px]",
+          "text-muted-foreground",
+          "transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+          "group-hover:-translate-y-0.5 group-hover:text-primary",
+        )}
+      />
     </button>
   );
 }
