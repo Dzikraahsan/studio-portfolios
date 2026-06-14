@@ -368,11 +368,11 @@ const Index = () => {
             about
           </h2>
           <p className="text-muted-foreground leading-relaxed max-w-2xl mb-4">
-            i'm a software engineer and frontend developer who loves building
-            things at the intersection of design and engineering. i believe
-            great software is equal parts technical precision and human empathy
-            — every interaction should feel intentional, and every detail should
-            have a purpose.
+            i'm a software frontend developer who loves building things at the
+            intersection of design and engineering. i believe great software is
+            equal parts technical precision and human empathy — every
+            interaction should feel intentional, and every detail should have a
+            purpose.
           </p>
           <Link
             to="/about"

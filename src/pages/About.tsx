@@ -215,8 +215,7 @@ const About = () => (
           about
         </h1>
         <p className="text-muted-foreground text-sm max-w-xl leading-relaxed">
-          software engineer · frontend developer · design & engineering
-          intersection
+          frontend developer · web developer · design enthusiast
         </p>
       </Reveal>
 
@@ -232,11 +231,11 @@ const About = () => (
               introduction
             </h2>
             <p>
-              i'm a software engineer and frontend developer who loves building
-              things at the intersection of design and engineering. i believe
-              great software is equal parts technical precision and human
-              empathy — every interaction should feel intentional, and every
-              detail should have a purpose.
+              i'm a frontend developer who loves building things at the
+              intersection of design and engineering. i believe great software
+              is equal parts technical precision and human empathy — every
+              interaction should feel intentional, and every detail should have
+              a purpose.
             </p>
           </div>
           <p>
