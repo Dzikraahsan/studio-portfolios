@@ -19,6 +19,16 @@ const tools = [
     icon: "https://cdn.simpleicons.org/zedindustries/181717/E5E7EB",
   },
   {
+    name: "HTML5",
+    subtitle: "Markup Language",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+  },
+  {
+    name: "CSS3",
+    subtitle: "Stylesheets",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+  },
+  {
     name: "React JS",
     subtitle: "Framework",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
@@ -160,6 +170,8 @@ const categoryOrder = [
   "Database",
   "Code Editor",
   "Design App",
+  "Markup Language",
+  "Stylesheets",
   "JavaScript Runtime",
   "DVCS",
   "Library",
