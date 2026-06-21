@@ -513,61 +513,78 @@ const ExpandToggle = ({
 
 // ─── Shared expanded content ──────────────────────────────────────────────────
 
-const ExpandedContent = ({ project }: { project: Project }) => (
-  <div className="grid sm:grid-cols-2 gap-5">
-    <div>
-      <SectionLabel>Highlights</SectionLabel>
-      <div className="flex flex-wrap gap-1.5">
-        {project.highlights.map((h) => (
-          <Chip key={h}>{h}</Chip>
-        ))}
-      </div>
-    </div>
-    <div>
-      <SectionLabel>Learnings</SectionLabel>
-      <div className="flex flex-wrap gap-1.5">
-        {project.learnings.map((l) => (
-          <Chip key={l}>{l}</Chip>
-        ))}
-      </div>
-    </div>
-    <div>
-      <SectionLabel>Challenge</SectionLabel>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {project.challenges}
-      </p>
-    </div>
-    <div>
-      <SectionLabel>Outcome</SectionLabel>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {project.outcome}
-      </p>
-    </div>
-    <div className="px-4 py-3 mb-4">
-      <span className="font-mono text-muted-foreground/50 uppercase tracking-wide text-[11px] block mb-2">
-        Stack
-      </span>
-      <div className="flex flex-col gap-2.5">
-        {project.technologies.map((g) => (
-          <div
-            key={g.label}
-            className="grid grid-cols-[72px_1fr] items-start gap-x-3"
-          >
-            <span className="pt-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground/40">
-              {g.label}
-            </span>
+const ExpandedContent = ({ project }: { project: Project }) => {
+  const uniqueTechs = Array.from(
+    new Set(project.technologies.flatMap((g) => g.items)),
+  );
 
-            <div className="flex flex-wrap gap-1.5">
-              {g.items.map((item) => (
-                <Chip key={item}>{item}</Chip>
-              ))}
+  return (
+    <div className="grid sm:grid-cols-2 gap-5">
+      {/* Challenge — restructured as problem framing */}
+      <div className="relative rounded-lg border border-border/30 bg-background/20 px-4 py-3.5">
+        <span className="absolute -left-px top-3 bottom-3 w-px bg-amber-400/30" />
+        <SectionLabel>Problem Faced</SectionLabel>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {project.challenges}
+        </p>
+      </div>
+
+      {/* Outcome — restructured as resolution framing */}
+      <div className="relative rounded-lg border border-border/30 bg-background/20 px-4 py-3.5">
+        <span className="absolute -left-px top-3 bottom-3 w-px bg-emerald-400/30" />
+        <SectionLabel>Resulting Outcome</SectionLabel>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {project.outcome}
+        </p>
+      </div>
+
+      {/* Key Decisions — derived from technologies, not the stack list itself */}
+      <div className="sm:col-span-2 rounded-lg border border-border/30 bg-background/20 px-4 py-3.5">
+        <SectionLabel>Key Decisions</SectionLabel>
+        <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
+          {uniqueTechs.map((tech) => (
+            <div key={tech} className="flex items-start gap-2.5">
+              <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-primary/40" />
+              <p className="text-[12px] text-muted-foreground leading-relaxed">
+                <span className="font-mono text-foreground/70">{tech}</span>{" "}
+                played a direct role in shaping how this project was built.
+              </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* Architecture breakdown — responsibility per layer, no chips repeated */}
+      <div className="sm:col-span-2 mb-5">
+        <SectionLabel>Architecture Breakdown</SectionLabel>
+        <div className="grid sm:grid-cols-2 gap-2.5">
+          {project.technologies.map((g, i) => (
+            <div
+              key={g.label}
+              className="flex gap-3 rounded-lg border border-border/30 bg-background/20 px-3.5 py-3"
+            >
+              <span
+                className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${
+                  i % 2 === 0 ? "bg-primary/40" : "bg-sky-400/40"
+                }`}
+              />
+              <div className="min-w-0">
+                <span className="text-[11px] font-mono uppercase tracking-wide text-foreground/65 block mb-1">
+                  {g.label} Layer
+                </span>
+                <p className="text-[12px] text-muted-foreground leading-relaxed">
+                  {g.items.length} component{g.items.length > 1 ? "s" : ""}{" "}
+                  responsible for {g.label.toLowerCase()}-level concerns within
+                  the application.
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ─── Metadata row ─────────────────────────────────────────────────────────────
 
@@ -599,6 +616,15 @@ const MetaRow = ({ project }: { project: Project }) => (
 
 // ─── Featured Card ────────────────────────────────────────────────────────────
 
+const categoryLabel: Record<Category, string> = {
+  "Full Stack": "Full Stack Application",
+  Frontend: "Frontend Application",
+  Tool: "Personal Productivity Tool",
+  Dashboard: "Dashboard System",
+  Business: "Business Website",
+  Portfolio: "Portfolio Platform",
+};
+
 const FeaturedCard = ({ project }: { project: Project }) => {
   const [expanded, setExpanded] = useState(false);
   const reducedMotion = useReducedMotion();
@@ -626,16 +652,21 @@ const FeaturedCard = ({ project }: { project: Project }) => {
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
-          {/* Left */}
+          {/* ─── Left: Project Narrative ─── */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-4 mb-3">
+            {/* Identity block */}
+            <div className="flex items-start justify-between gap-4 mb-1">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-1">
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-1.5">
                   {project.title}
                 </h2>
-                <span className="text-[11px] font-mono text-muted-foreground/50 uppercase tracking-wide">
-                  {project.category}
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-mono text-muted-foreground/50 uppercase tracking-wide">
+                    {project.category}
+                  </span>
+                  <span className="h-2.5 w-px bg-border/50" />
+                  <StatusBadge status={project.status} />
+                </div>
               </div>
               {demoUrl && (
                 <a
@@ -650,67 +681,99 @@ const FeaturedCard = ({ project }: { project: Project }) => {
               )}
             </div>
 
+            {/* Classification label */}
+            <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-primary/50 block mt-3 mb-3">
+              {categoryLabel[project.category]}
+            </span>
+
+            {/* Summary */}
             <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-xl">
               {project.description}
             </p>
 
+            {/* Project Snapshot strip */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-lg border border-border/40 bg-border/40 overflow-hidden mb-5">
+              {[
+                { label: "Role", value: project.role },
+                { label: "Duration", value: project.duration },
+                { label: "Complexity", value: project.complexity },
+                { label: "Year", value: project.year },
+              ].map(({ label, value }) => (
+                <div key={label} className="bg-surface/60 px-3 py-2.5 min-w-0">
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-muted-foreground/40 block mb-0.5">
+                    {label}
+                  </span>
+                  <span className="text-[11px] font-mono text-foreground/75 truncate block">
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
             <MetaRow project={project} />
           </div>
 
-          {/* Right: stats panel */}
-          <div className="mt-6 lg:mt-0 lg:w-52 shrink-0">
-            <div className="rounded-xl border border-border/40 bg-muted/20 divide-y divide-border/40">
-              {[
-                {
-                  label: "Status",
-                  node: <StatusBadge status={project.status} />,
-                },
-                {
-                  label: "Complexity",
-                  node: <ComplexityBar level={project.complexity} />,
-                },
-                {
-                  label: "Duration",
-                  node: (
-                    <span className="text-[11px] font-mono text-foreground/70">
+          {/* ─── Right: Project Intelligence Panel ─── */}
+          <div className="mt-6 lg:mt-0 lg:w-60 shrink-0">
+            <div className="rounded-xl border border-border/40 bg-muted/20 overflow-hidden">
+              {/* Project State */}
+              <div className="px-4 py-3 border-b border-border/40">
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/35 block mb-2.5">
+                  Project State
+                </span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-mono text-muted-foreground/50 uppercase tracking-wide">
+                      Status
+                    </span>
+                    <StatusBadge status={project.status} />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-mono text-muted-foreground/50 uppercase tracking-wide">
+                      Complexity
+                    </span>
+                    <ComplexityBar level={project.complexity} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div className="px-4 py-3 border-b border-border/40">
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/35 block mb-2.5">
+                  Timeline
+                </span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-mono text-muted-foreground/50 uppercase tracking-wide">
+                      Duration
+                    </span>
+                    <span className="font-mono text-foreground/70">
                       {project.duration}
                     </span>
-                  ),
-                },
-                {
-                  label: "Year",
-                  node: (
-                    <span className="text-[11px] font-mono text-foreground/70">
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-mono text-muted-foreground/50 uppercase tracking-wide">
+                      Year
+                    </span>
+                    <span className="font-mono text-foreground/70">
                       {project.year}
                     </span>
-                  ),
-                },
-              ].map(({ label, node }) => (
-                <div
-                  key={label}
-                  className="flex items-center justify-between px-4 py-2.5 text-[11px]"
-                >
-                  <span className="font-mono text-muted-foreground/50 uppercase tracking-wide">
-                    {label}
-                  </span>
-                  {node}
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Technology Ecosystem */}
               <div className="px-4 py-3">
-                <span className="font-mono text-muted-foreground/50 uppercase tracking-wide text-[11px] block mb-2">
-                  Stack
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/35 block mb-2.5">
+                  Technology Ecosystem
                 </span>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2.5">
                   {project.technologies.map((g) => (
-                    <div
-                      key={g.label}
-                      className="flex flex-col sm:flex-row sm:items-start gap-2"
-                    >
-                      <span className="text-[10px] font-mono text-muted-foreground/40 w-20 shrink-0 uppercase tracking-wider">
+                    <div key={g.label}>
+                      <span className="text-[9px] font-mono text-muted-foreground/40 uppercase tracking-wider block mb-1">
                         {g.label}
                       </span>
-
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1">
                         {g.items.map((item) => (
                           <Chip key={item}>{item}</Chip>
                         ))}
@@ -721,13 +784,6 @@ const FeaturedCard = ({ project }: { project: Project }) => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Highlights */}
-        <div className="mt-5 flex flex-wrap gap-1.5">
-          {project.highlights.map((h) => (
-            <Chip key={h}>{h}</Chip>
-          ))}
         </div>
 
         {/* Toggle + expansion */}
