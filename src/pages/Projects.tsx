@@ -842,7 +842,7 @@ const ProjectRow = ({
           </div>
 
           {/* Right actions */}
-          <div className="shrink-0 flex flex-col items-end gap-2 ml-1">
+          <div className="shrink-0 flex flex-col items-end gap-2 ml-4 pr-2.5">
             <StatusBadge status={project.status} />
             <div className="flex items-center gap-2 mt-0.5">
               {demoUrl && (

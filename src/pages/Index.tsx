@@ -377,23 +377,131 @@ const Index = () => {
         </Reveal>
 
         {/* About Preview */}
-        <Reveal as="section" className="py-16 border-t border-border/40">
-          <h2 className="font-mono text-xs text-primary tracking-widest uppercase mb-6">
-            about
-          </h2>
-          <p className="text-muted-foreground leading-relaxed max-w-2xl mb-4">
-            i'm a frontend developer who loves building things at the
-            intersection of design and engineering. i believe great software is
-            equal parts technical precision and human empathy — every
-            interaction should feel intentional, and every detail should have a
-            purpose.
-          </p>
-          <Link
-            to="/about"
-            className="font-mono text-xs text-primary hover:underline inline-flex items-center gap-1"
-          >
-            read more <ArrowRight size={12} />
-          </Link>
+        {/* add once, if not already present in this file: import { motion } from "framer-motion"; */}
+        <Reveal
+          as="section"
+          className="py-20 md:py-24 border-t border-border/40"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-y-10 md:gap-x-10">
+            {/* Left: Introduction */}
+            <div className="md:col-span-7">
+              <div className="flex items-center gap-4 mb-7">
+                <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
+                  about
+                </h2>
+                <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+              </div>
+
+              <p className="text-muted-foreground leading-[1.85] max-w-xl text-[15px] mb-8">
+                i'm a frontend developer who loves building things at the
+                intersection of design and engineering. i believe great software
+                is equal parts technical precision and human empathy — every
+                interaction should feel intentional, and every detail should
+                have a purpose.
+              </p>
+
+              <Link
+                to="/about"
+                className="group font-mono text-xs text-primary inline-flex items-center gap-1.5 py-2 -my-2 pr-2 rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span className="relative">
+                  read more
+                  <span className="absolute left-0 -bottom-0.5 h-px w-full bg-primary origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                </span>
+                <ArrowRight
+                  size={12}
+                  className="transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                />
+              </Link>
+            </div>
+
+            {/* Right: Principles */}
+            <aside
+              aria-labelledby="about-preview-principles-label"
+              className="pt-10 md:pt-0 border-t md:border-t-0 md:border-l border-border/40 md:pl-10 md:col-span-5"
+            >
+              <h3
+                id="about-preview-principles-label"
+                className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-6"
+              >
+                principles
+              </h3>
+
+              <ul className="space-y-6">
+                <motion.li
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0, ease: "easeOut" }}
+                  className="flex items-start gap-3"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-[10px] text-primary/70 tabular-nums pt-0.5"
+                  >
+                    01
+                  </span>
+                  <div>
+                    <h4 className="font-mono text-xs text-foreground tracking-wide mb-1">
+                      precision
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      engineered down to the pixel, the easing curve, the
+                      millisecond.
+                    </p>
+                  </div>
+                </motion.li>
+
+                <motion.li
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
+                  className="flex items-start gap-3"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-[10px] text-primary/70 tabular-nums pt-0.5"
+                  >
+                    02
+                  </span>
+                  <div>
+                    <h4 className="font-mono text-xs text-foreground tracking-wide mb-1">
+                      clarity
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      complexity hidden behind the scenes; what ships feels
+                      obvious.
+                    </p>
+                  </div>
+                </motion.li>
+
+                <motion.li
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                  className="flex items-start gap-3"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-[10px] text-primary/70 tabular-nums pt-0.5"
+                  >
+                    03
+                  </span>
+                  <div>
+                    <h4 className="font-mono text-xs text-foreground tracking-wide mb-1">
+                      craft
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      care that surfaces in the details most people never
+                      notice.
+                    </p>
+                  </div>
+                </motion.li>
+              </ul>
+            </aside>
+          </div>
         </Reveal>
 
         {/* Featured Projects */}
@@ -429,6 +537,18 @@ const Index = () => {
           <div className="grid gap-5 sm:grid-cols-2">
             {[
               {
+                to: "/projects",
+                label: "projects",
+                title: "Projects",
+                description:
+                  "a curated archive of things i've built — from quick experiments to full-stack applications. each entry is shipped, learned from, and documented.",
+                icon: BookOpen,
+                meta: [
+                  { icon: Layers, text: "9 projects" },
+                  { icon: Activity, text: "active" },
+                ],
+              },
+              {
                 to: "/learning-journey",
                 label: "learning journey",
                 title: "Learning Journey",
@@ -450,6 +570,18 @@ const Index = () => {
                 meta: [
                   { icon: Layers, text: "8 records" },
                   { icon: Activity, text: "archive" },
+                ],
+              },
+              {
+                to: "/contact",
+                label: "contact",
+                title: "Contact",
+                description:
+                  "have a project in mind, a question, or just want to say hi? i'd love to hear from you.",
+                icon: Archive,
+                meta: [
+                  { icon: Layers, text: "form & quick info" },
+                  { icon: Activity, text: "connect" },
                 ],
               },
             ].map(({ to, label, title, description, icon: Icon, meta }) => (
