@@ -7,6 +7,8 @@ import {
   Archive,
   Layers,
   Activity,
+  FolderGit2,
+  Mail,
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import Reveal from "@/components/Reveal";
@@ -542,10 +544,10 @@ const Index = () => {
                 title: "Projects",
                 description:
                   "a curated archive of things i've built — from quick experiments to full-stack applications. each entry is shipped, learned from, and documented.",
-                icon: BookOpen,
+                icon: FolderGit2,
                 meta: [
                   { icon: Layers, text: "9 projects" },
-                  { icon: Activity, text: "active" },
+                  { icon: Activity, text: "craft & code" },
                 ],
               },
               {
@@ -578,7 +580,7 @@ const Index = () => {
                 title: "Contact",
                 description:
                   "have a project in mind, a question, or just want to say hi? i'd love to hear from you.",
-                icon: Archive,
+                icon: Mail,
                 meta: [
                   { icon: Layers, text: "form & quick info" },
                   { icon: Activity, text: "connect" },
