@@ -572,34 +572,55 @@ const ExpandToggle = ({
 // ─── Shared expanded content ──────────────────────────────────────────────────
 
 const ExpandedContent = ({ project }: { project: Project }) => (
-  <div className="grid sm:grid-cols-2 gap-5">
+  <div className="flex flex-col gap-5 text-left">
+    {/* Highlights Section */}
     <div>
       <SectionLabel>Highlights</SectionLabel>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1.5 mt-1">
         {project.highlights.map((h) => (
-          <Chip key={h}>{h}</Chip>
+          <Chip
+            key={h}
+            className="text-[9px] px-1.5 py-0.5 bg-background/30 hover:translate-y-0"
+          >
+            {h}
+          </Chip>
         ))}
       </div>
     </div>
+
+    {/* Learnings Section */}
     <div>
       <SectionLabel>Learnings</SectionLabel>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1.5 mt-1">
         {project.learnings.map((l) => (
-          <Chip key={l}>{l}</Chip>
+          <Chip
+            key={l}
+            className="text-[9px] px-1.5 py-0.5 bg-background/30 hover:translate-y-0"
+          >
+            {l}
+          </Chip>
         ))}
       </div>
     </div>
-    <div>
-      <SectionLabel>Challenge</SectionLabel>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {project.challenges}
-      </p>
-    </div>
-    <div>
-      <SectionLabel>Outcome</SectionLabel>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {project.outcome}
-      </p>
+
+    {/* Divider tipis antar bagian teks */}
+    <div className="h-px bg-border/20 my-1" />
+
+    {/* Challenge & Outcome - Disusun vertikal satu kolom agar tidak berhimpitan */}
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <SectionLabel>Challenge</SectionLabel>
+        <p className="text-[12px] sm:text-xs text-muted-foreground/80 leading-relaxed font-normal">
+          {project.challenges}
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <SectionLabel>Outcome</SectionLabel>
+        <p className="text-[12px] sm:text-xs text-muted-foreground/80 leading-relaxed font-normal">
+          {project.outcome}
+        </p>
+      </div>
     </div>
   </div>
 );
@@ -776,113 +797,328 @@ const FeaturedCard = ({ project }: { project: Project }) => {
   );
 };
 
-// ─── Project Row ──────────────────────────────────────────────────────────────
+// ─── Project Card ──────────────────────────────────────────────────────────────
 
-const ProjectRow = ({
+export const ProjectCard = ({
   project,
   index,
+  onOpenDetails,
 }: {
   project: Project;
   index: number;
+  onOpenDetails: (project: Project) => void;
 }) => {
-  const [expanded, setExpanded] = useState(false);
-  const reducedMotion = useReducedMotion();
   const demoUrl = project.liveDemo || project.link || null;
 
   return (
     <Reveal index={index}>
       <div
-        className={`rounded-xl border overflow-hidden transition-all duration-250 ${
-          expanded
-            ? "border-primary/20 bg-surface/40"
-            : "border-border/50 bg-surface/20 md:hover:border-border/80 md:hover:bg-surface/30 md:hover:-translate-y-px"
-        }`}
+        onClick={() => onOpenDetails(project)}
+        className="flex flex-col h-full rounded-2xl border border-border/50 bg-surface/20 md:hover:border-border/80 md:hover:bg-surface/30 md:hover:-translate-y-1 transition-all duration-250 cursor-pointer overflow-hidden group"
         style={{ willChange: "transform" }}
       >
-        <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5">
-          {/* Number */}
-          <span className="shrink-0 text-[11px] font-mono text-muted-foreground/25 mt-0.5 w-5 text-right">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mb-1.5">
-              <h3 className="text-[15px] font-semibold tracking-tight text-foreground">
+        {/* Main Card Body */}
+        <div className="flex flex-col flex-1 p-5 sm:p-6">
+          {/* Header Area */}
+          <div className="flex items-start justify-between gap-4 mb-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono text-muted-foreground/30">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-border/60" />
+                <span className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground/45">
+                  {project.category}
+                </span>
+              </div>
+              <h3 className="text-lg font-semibold tracking-tight text-foreground truncate group-hover:text-primary transition-colors duration-200">
                 {project.title}
               </h3>
-              <span className="h-2.5 w-px bg-border/50" />
-              <span className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground/45">
-                {project.category}
-              </span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-3">
-              {project.description}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] font-mono text-muted-foreground/55">
-              <span className="inline-flex items-center gap-1.5">
-                <CalendarDays size={11} />
-                {project.year}
-              </span>
-              <span className="h-2.5 w-px bg-border/50" />
-              <span className="inline-flex items-center gap-1.5">
-                <Layers size={11} />
-                {project.tags.length} stack
-              </span>
-              <span className="h-2.5 w-px bg-border/50" />
-              <span className="inline-flex items-center gap-1.5">
-                <Clock size={11} />
-                {project.duration}
-              </span>
-              <span className="h-2.5 w-px bg-border/50 hidden sm:inline" />
-              <span className="hidden sm:inline">
-                <ComplexityBar level={project.complexity} />
-              </span>
-            </div>
+            <StatusBadge status={project.status} />
           </div>
 
-          {/* Right actions */}
-          <div className="shrink-0 flex flex-col items-end gap-2 ml-4 pr-2.5">
-            <StatusBadge status={project.status} />
-            <div className="flex items-center gap-2 mt-0.5">
-              {demoUrl && (
-                <a
-                  href={demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground/40 hover:text-primary transition-all duration-200 hover:-translate-y-0.5 hover:translate-x-0.5"
-                  style={{ willChange: "transform" }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ArrowUpRight size={13} />
-                </a>
-              )}
-              <button
-                onClick={() => setExpanded((v) => !v)}
-                className="text-muted-foreground/35 hover:text-primary transition-colors duration-200"
-              >
-                <ChevronDown
-                  size={13}
-                  style={{
-                    transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: reducedMotion
-                      ? "none"
-                      : "transform 240ms cubic-bezier(0.4,0,0.2,1)",
-                  }}
-                />
-              </button>
+          {/* Description */}
+          <p className="text-sm text-muted-foreground leading-relaxed mb-6 line-clamp-3 flex-1">
+            {project.description}
+          </p>
+
+          {/* Meta Information List */}
+          <div className="space-y-2 pt-4 border-t border-border/30 text-[11px] font-mono text-muted-foreground/60">
+            <div className="flex justify-between items-center">
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarDays size={11} className="text-muted-foreground/40" />
+                Year
+              </span>
+              <span className="text-foreground/70">{project.year}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="inline-flex items-center gap-1.5">
+                <Layers size={11} className="text-muted-foreground/40" />
+                Stack
+              </span>
+              <span className="text-foreground/70">
+                {project.tags.length} technologies
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="inline-flex items-center gap-1.5">
+                <Clock size={11} className="text-muted-foreground/40" />
+                Duration
+              </span>
+              <span className="text-foreground/70">{project.duration}</span>
             </div>
           </div>
         </div>
 
-        {/* Expanded panel */}
-        <AnimatedPanel open={expanded} reducedMotion={reducedMotion}>
-          <div className="border-t border-border/40 px-4 sm:px-5 py-5 pl-12 sm:pl-14">
-            <ExpandedContent project={project} />
-          </div>
-        </AnimatedPanel>
+        {/* Footer Actions (Static links pointing to Modal) */}
+        <div className="flex items-center justify-between px-5 py-3.5 bg-muted/10 border-t border-border/35 mt-auto">
+          <button className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-200">
+            <ChevronDown
+              size={12}
+              className="-rotate-90 group-hover:translate-x-0.5 transition-transform"
+            />
+            <span>view details</span>
+          </button>
+
+          {demoUrl && (
+            <a
+              href={demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()} // Supaya tidak men-trigger click modal
+              className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-all duration-200 hover:-translate-y-0.5"
+              style={{ willChange: "transform" }}
+            >
+              <span>live demo</span>
+              <ArrowUpRight size={12} />
+            </a>
+          )}
+        </div>
       </div>
     </Reveal>
+  );
+};
+
+// ─── Project Modal (Floating Detail) ──────────────────────────────────────────
+
+interface ProjectModalProps {
+  project: Project | null;
+  onClose: () => void;
+}
+
+const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+  const reducedMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  // Mencegah scroll pada body utama saat modal terbuka
+  useEffect(() => {
+    if (project) {
+      document.body.style.overflow = "hidden";
+      setMounted(true);
+      // Memicu animasi masuk (ease-out) pada frame berikutnya
+      const animationFrame = requestAnimationFrame(() => {
+        setVisible(true);
+      });
+      return () => cancelAnimationFrame(animationFrame);
+    } else {
+      setVisible(false);
+      // Menunggu animasi keluar selesai sebelum unmount komponen
+      const timeout = setTimeout(() => {
+        setMounted(false);
+        document.body.style.overflow = "";
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [project]);
+
+  if (!mounted && !project) return null;
+
+  const demoUrl = project?.liveDemo || project?.link || null;
+
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
+        visible
+          ? "bg-background/40 backdrop-blur-md opacity-100"
+          : "bg-background/0 backdrop-blur-none opacity-0"
+      }`}
+      style={{
+        transitionTimingFunction: visible
+          ? "cubic-bezier(0.215, 0.610, 0.355, 1)"
+          : "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+      }}
+    >
+      {/* Backdrop click to close */}
+      <div className="absolute inset-0" onClick={onClose} />
+
+      {/* Modal Card Content */}
+      {project && (
+        <div
+          className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-primary/25 bg-surface/70 backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-300 ${
+            visible
+              ? "opacity-100 scale-100 translate-y-0"
+              : "opacity-0 scale-95 translate-y-4"
+          }`}
+          style={{
+            willChange: "transform, opacity",
+            transitionTimingFunction: visible
+              ? "cubic-bezier(0.215, 0.610, 0.355, 1)"
+              : "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+          }}
+        >
+          {/* Header Strip Gradient */}
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+          {/* Modal Header */}
+          <div className="flex items-start justify-between p-5 sm:p-6 border-b border-border/40">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono uppercase tracking-wide text-primary/70">
+                  {project.category}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-border/60" />
+                <span className="text-[10px] font-mono text-muted-foreground/45">
+                  {project.year}
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                {project.title}
+              </h2>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          {/* Scrollable Modal Body */}
+          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {/* Description */}
+            <div>
+              <SectionLabel>About Project</SectionLabel>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                {project.description}
+              </p>
+            </div>
+
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-muted/10 p-4 rounded-xl border border-border/30">
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Status
+                </span>
+                <div className="mt-1">
+                  <StatusBadge status={project.status} />
+                </div>
+              </div>
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Duration
+                </span>
+                <span className="block text-xs font-mono text-foreground mt-1">
+                  {project.duration}
+                </span>
+              </div>
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Role
+                </span>
+                <span className="block text-xs font-mono text-foreground mt-1 truncate">
+                  {project.role}
+                </span>
+              </div>
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Complexity
+                </span>
+                <div className="mt-1">
+                  <ComplexityBar level={project.complexity} />
+                </div>
+              </div>
+            </div>
+
+            {/* Core Technologies Stack */}
+            <div>
+              <SectionLabel>Technology Stack</SectionLabel>
+              <div className="flex flex-col gap-3 mt-2">
+                {project.technologies.map((g) => (
+                  <div
+                    key={g.label}
+                    className="flex flex-col sm:flex-row sm:items-center gap-2"
+                  >
+                    <span className="text-[10px] font-mono text-muted-foreground/50 w-20 shrink-0 uppercase tracking-wider">
+                      {g.label}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {g.items.map((item) => (
+                        <Chip key={item} className="bg-background/40">
+                          {item}
+                        </Chip>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Expanded Rich Details */}
+            <div className="grid sm:grid-cols-2 gap-5 pt-4 border-t border-border/30">
+              <div>
+                <SectionLabel>Highlights</SectionLabel>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {project.highlights.map((h) => (
+                    <Chip key={h}>{h}</Chip>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <SectionLabel>Learnings</SectionLabel>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {project.learnings.map((l) => (
+                    <Chip key={l}>{l}</Chip>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-5 pt-4 border-t border-border/30">
+              <div className="space-y-1">
+                <SectionLabel>Challenge</SectionLabel>
+                <p className="text-xs sm:text-sm text-muted-foreground/80 leading-relaxed">
+                  {project.challenges}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <SectionLabel>Outcome</SectionLabel>
+                <p className="text-xs sm:text-sm text-muted-foreground/80 leading-relaxed">
+                  {project.outcome}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Modal Footer / Action Bar */}
+          {demoUrl && (
+            <div className="flex items-center justify-end px-5 py-4 bg-muted/20 border-t border-border/40">
+              <a
+                href={demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
+              >
+                <span>launch live site</span>
+                <ArrowUpRight size={13} />
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -893,6 +1129,9 @@ const Projects = () => {
   const [activeStatus, setActiveStatus] = useState<ProjectStatus | null>(null);
   const [activeYear, setActiveYear] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+
+  // State baru untuk menampung data projek yang sedang dibuka di modal
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const featuredProject = allProjects[0];
   const restProjects = allProjects.slice(1);
@@ -1021,6 +1260,7 @@ const Projects = () => {
             </span>
             <span className="h-px flex-1 bg-border/30" />
           </div>
+          {/* FeaturedCard dihubungkan ke Modal saat diklik detail di masa depan */}
           <FeaturedCard project={featuredProject} />
         </Reveal>
 
@@ -1107,11 +1347,18 @@ const Projects = () => {
         </Reveal>
 
         {/* ── Project list ── */}
-        <div className="space-y-3">
+        <div>
           {filtered.length > 0 ? (
-            filtered.map((project, i) => (
-              <ProjectRow key={project.title} project={project} index={i} />
-            ))
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map((project, i) => (
+                <ProjectCard
+                  key={project.title}
+                  project={project}
+                  index={i}
+                  onOpenDetails={(proj) => setSelectedProject(proj)}
+                />
+              ))}
+            </div>
           ) : (
             <Reveal>
               <div className="py-16 text-center">
@@ -1128,6 +1375,12 @@ const Projects = () => {
             </Reveal>
           )}
         </div>
+
+        {/* ── Shared Floating Detail Modal ── */}
+        <ProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
 
         {/* ── Footer note ── */}
         <Reveal index={4} className="mt-14 -mb-20">
