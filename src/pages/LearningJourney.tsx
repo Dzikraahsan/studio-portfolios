@@ -1,20 +1,21 @@
-import PageTransition from "@/components/PageTransition";
-import Reveal from "@/components/Reveal";
+import { useState, useEffect } from "react";
 import {
   Code2,
   Server,
   FileCode,
   Palette,
   Clock,
-  Wrench,
-  ChevronDown,
   BookOpen,
   Target,
   TrendingUp,
   CheckCircle2,
   Circle,
+  Layers,
 } from "lucide-react";
-import { useState } from "react";
+import PageTransition from "@/components/PageTransition";
+import Reveal from "@/components/Reveal";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type Milestone = {
   label: string;
@@ -51,13 +52,15 @@ type ExperimentDetail = {
 type Experiment = {
   title: string;
   description: string;
-  status: string;
+  status: "learning" | "completed" | "paused";
   duration: string;
   tools: string[];
   icon: React.ElementType;
   logo?: string;
   detail: ExperimentDetail;
 };
+
+// ─── Data (Keep Original Structure) ──────────────────────────────────────────
 
 const experiments: Experiment[] = [
   {
@@ -112,12 +115,8 @@ const experiments: Experiment[] = [
           category: "UI Framework",
           logo: "https://cdn.simpleicons.org/flutter/54C5F8",
         },
-        // { name: "DartPad", category: "Playground" },
       ],
-      timeInvestment: {
-        started: "Early 2026",
-        consistency: "Weekly sessions",
-      },
+      timeInvestment: { started: "Early 2026", consistency: "Weekly sessions" },
       personalNote:
         "Dart is the first language I've picked up that feels like it was designed with UI in mind from the start. The way everything composes in Flutter's widget tree is genuinely elegant once it clicks. Still early days, but I can already feel the potential.",
     },
@@ -189,10 +188,7 @@ const experiments: Experiment[] = [
           logo: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
         },
       ],
-      timeInvestment: {
-        started: "Mid 2025",
-        consistency: "Daily practice",
-      },
+      timeInvestment: { started: "Mid 2025", consistency: "Daily practice" },
       personalNote:
         "React changed how I think about UI. Before it, I thought about pages — now I think about components, state, and data flow. Building this portfolio in React pushed my understanding further than any tutorial could. Every design decision forced a real architectural choice.",
     },
@@ -330,12 +326,8 @@ const experiments: Experiment[] = [
           category: "Runtime",
           logo: "https://cdn.simpleicons.org/nodedotjs",
         },
-        // { name: "ESLint", category: "Linting" },
       ],
-      timeInvestment: {
-        started: "Late 2024",
-        consistency: "Daily",
-      },
+      timeInvestment: { started: "Late 2024", consistency: "Daily" },
       personalNote:
         "JS and TS are the languages I think in now. TypeScript especially — once I stopped seeing it as optional extra work and started seeing it as documentation that runs, everything changed. I write better code because of it.",
     },
@@ -411,15 +403,14 @@ const experiments: Experiment[] = [
           logo: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
         },
       ],
-      timeInvestment: {
-        started: "2023",
-        consistency: "Completed",
-      },
+      timeInvestment: { started: "2023", consistency: "Completed" },
       personalNote:
         "HTML and CSS taught me that the web has a grain — a natural way things want to work. Fighting that grain produces brittle layouts. Working with it produces interfaces that feel right. That lesson shapes how I approach all frontend work now.",
     },
   },
 ];
+
+// ─── Style Mappings ───────────────────────────────────────────────────────────
 
 const statusStyles: Record<string, string> = {
   learning: "text-primary border-primary/30 bg-primary/5",
@@ -428,21 +419,15 @@ const statusStyles: Record<string, string> = {
 };
 
 const dotStyles: Record<string, string> = {
-  learning: "bg-primary shadow-[0_0_8px_2px_hsl(var(--primary)/0.35)]",
-  completed: "bg-emerald-400 shadow-[0_0_8px_2px_rgba(52,211,153,0.3)]",
+  learning: "bg-primary shadow-[0_0_8px_2px_hsl(var(--primary)/0.3)]",
+  completed: "bg-emerald-400 shadow-[0_0_8px_2px_rgba(52,211,153,0.25)]",
   paused: "bg-muted-foreground",
 };
 
-const accentBar: Record<string, string> = {
-  learning: "from-primary/20 to-transparent",
-  completed: "from-emerald-500/20 to-transparent",
-  paused: "from-border to-transparent",
-};
-
 const stageColor: Record<string, string> = {
-  beginner: "text-amber-400 border-amber-500/30 bg-amber-500/5",
-  intermediate: "text-sky-400 border-sky-500/30 bg-sky-500/5",
-  advanced: "text-violet-400 border-violet-500/30 bg-violet-500/5",
+  beginner: "text-amber-400 border-amber-500/20 bg-amber-500/5",
+  intermediate: "text-sky-400 border-sky-500/20 bg-sky-500/5",
+  advanced: "text-violet-400 border-violet-500/20 bg-violet-500/5",
 };
 
 const progressBarColor: Record<string, string> = {
@@ -451,210 +436,148 @@ const progressBarColor: Record<string, string> = {
   paused: "bg-muted-foreground",
 };
 
-type CardProps = {
-  exp: Experiment;
-};
+// ─── Shared Component Primitives ──────────────────────────────────────────────
 
-const JourneyCard = ({ exp }: CardProps) => {
-  const [open, setOpen] = useState(false);
-  const Icon = exp.icon;
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/45 block mb-1.5">
+    {children}
+  </span>
+);
+
+const Chip = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <span
+    className={`inline-flex items-center text-[10px] font-mono px-2 py-0.5 rounded-md border border-border/40 bg-background/40 text-muted-foreground/80 ${className}`}
+  >
+    {children}
+  </span>
+);
+
+// ─── Individual RoadNode Component (Fully Expanded Structural Bento) ─────────
+
+interface RoadNodeProps {
+  exp: Experiment;
+  index: number;
+  isLast: boolean;
+}
+
+const RoadNode = ({ exp, index, isLast }: RoadNodeProps) => {
   const d = exp.detail;
 
   return (
-    <div className="group relative flex flex-col border border-border/60 rounded-xl overflow-hidden hover:border-primary/40 transition-all duration-300 bg-background/50">
-      {/* Top accent bar */}
-      <div
-        className={`h-px w-full bg-gradient-to-r ${accentBar[exp.status]}`}
-      />
-
-      {/* ── Collapsed content ── */}
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start gap-4 mb-4">
-          {/* Logo / icon */}
-          <div className="shrink-0 flex flex-col items-center gap-2">
-            <div className="w-11 h-11 rounded-lg bg-secondary/60 border border-border/60 flex items-center justify-center group-hover:border-primary/40 group-hover:scale-105 transition-all duration-300 overflow-hidden">
-              {exp.logo ? (
-                <img
-                  src={exp.logo}
-                  alt={exp.title}
-                  className="w-6 h-6 object-contain"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display =
-                      "none";
-                    const fb = e.currentTarget
-                      .nextElementSibling as HTMLElement | null;
-                    if (fb) fb.style.display = "flex";
-                  }}
-                />
-              ) : null}
-              <span
-                className="items-center justify-center"
-                style={{ display: exp.logo ? "none" : "flex" }}
-              >
-                <Icon
-                  size={18}
-                  className="text-muted-foreground group-hover:text-primary transition-colors"
-                />
-              </span>
-            </div>
-            {exp.logo && (
-              <div className="w-5 h-5 rounded-md bg-secondary/40 border border-border/40 flex items-center justify-center">
-                <Icon
-                  size={11}
-                  className="text-muted-foreground/60 group-hover:text-primary/60 transition-colors"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Title + duration */}
-          <div className="flex-1 min-w-0 pt-0.5">
-            <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors leading-tight mb-1">
-              {exp.title}
-            </h3>
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/70">
-              <Clock size={10} />
-              <span className="font-mono">{exp.duration}</span>
-            </div>
-          </div>
-
-          {/* Status badge */}
-          <span
-            className={`shrink-0 font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full border ${statusStyles[exp.status]}`}
-          >
-            {exp.status}
-          </span>
-        </div>
-
-        {/* Divider */}
-        <div className="border-t border-border/40 mb-4" />
-
-        {/* Description */}
-        <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-          {exp.description}
-        </p>
-
-        {/* Progress bar */}
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-1.5">
-              <TrendingUp size={10} className="text-muted-foreground/50" />
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                progress
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span
-                className={`font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${stageColor[d.progressStage]}`}
-              >
-                {d.progressStage}
-              </span>
-              <span className="font-mono text-[10px] text-muted-foreground/60">
-                {d.progressPercent}%
-              </span>
-            </div>
-          </div>
-          <div className="h-1 w-full rounded-full bg-secondary/60 overflow-hidden">
+    <Reveal index={index}>
+      <div className="relative w-full flex items-stretch gap-4 sm:gap-6">
+        {/* Left Axis Line Segment */}
+        <div className="flex flex-col items-center shrink-0 w-8">
+          <div className="relative z-10 flex items-center justify-center w-7 h-7 rounded-full bg-background border border-border/60">
             <div
-              className={`h-full rounded-full transition-all duration-700 ${progressBarColor[exp.status]}`}
-              style={{ width: `${d.progressPercent}%` }}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${dotStyles[exp.status]}`}
             />
           </div>
+          {!isLast && (
+            <div className="w-[1px] flex-1 bg-border/45 pointer-events-none mt-2 mb-2" />
+          )}
         </div>
 
-        {/* Tools section */}
-        <div className="rounded-lg bg-secondary/30 border border-border/40 px-3.5 py-3 mb-4">
-          <div className="flex items-center gap-1.5 mb-2.5">
-            <Wrench size={10} className="text-muted-foreground/50" />
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-              stack
+        {/* Right Expanded Block Content */}
+        <div className="flex-1 border border-border/40 bg-surface/10 rounded-xl p-4 sm:p-5 overflow-hidden mb-8 space-y-5">
+          {/* Main Top Header Block */}
+          <div className="flex items-start justify-between gap-3 border-b border-border/30 pb-3">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-mono text-[10px] text-muted-foreground/35">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="h-1 w-1 rounded-full bg-border/40" />
+                <div className="flex items-center gap-1 text-[10px] text-muted-foreground/50 font-mono">
+                  <Clock size={10} />
+                  <span>{exp.duration}</span>
+                </div>
+              </div>
+              <h3 className="text-base font-bold text-foreground leading-snug">
+                {exp.title}
+              </h3>
+            </div>
+
+            <span
+              className={`font-mono text-[9px] tracking-wider uppercase px-2 py-0.5 rounded-full border shrink-0 ${statusStyles[exp.status]}`}
+            >
+              {exp.status}
             </span>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {exp.tools.map((tool) => (
-              <span
-                key={tool}
-                className="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-secondary/60 border border-border/50 text-foreground/75"
-              >
-                {tool}
-              </span>
-            ))}
-          </div>
-        </div>
 
-        {/* Expand toggle */}
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="w-full flex items-center justify-between text-[11px] font-mono text-muted-foreground/60 hover:text-primary transition-colors pt-1 pb-0.5 group/btn"
-          aria-expanded={open}
-        >
-          <span className="uppercase tracking-widest text-[9px]">
-            {open ? "collapse" : "expand journey"}
-          </span>
-          <ChevronDown
-            size={13}
-            className={`transition-transform duration-300 ${open ? "rotate-180" : "rotate-0"}`}
-          />
-        </button>
-      </div>
-
-      {/* ── Expanded content ── */}
-      <div
-        className={`overflow-hidden transition-all duration-500 ease-in-out ${open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"}`}
-      >
-        <div className="border-t border-border/40 px-6 pb-6 pt-5 flex flex-col gap-5">
-          {/* Overview */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-2.5">
-              <BookOpen size={10} className="text-muted-foreground/50" />
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                overview
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+          {/* Description & Overview */}
+          <div className="space-y-1">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              {exp.description}
+            </p>
+            <p className="text-xs text-muted-foreground/60 leading-relaxed italic">
               {d.overview}
             </p>
           </div>
 
-          <div className="border-t border-border/30" />
-
-          {/* Journey narrative */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-2.5">
-              <Target size={10} className="text-muted-foreground/50" />
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                journey
-              </span>
+          {/* Continuous Progress Metric Track */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-[9px] font-mono text-muted-foreground/50">
+              <div className="flex items-center gap-1">
+                <TrendingUp size={10} />
+                <span>PROGRESS ROADMAP</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={`font-mono uppercase text-[7px] tracking-wider px-1.5 py-0.2 rounded border ${stageColor[d.progressStage]}`}
+                >
+                  {d.progressStage}
+                </span>
+                <span className="text-foreground/70 font-semibold">
+                  {d.progressPercent}%
+                </span>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <div className="h-1 w-full rounded-full bg-secondary/50 overflow-hidden">
+              <div
+                className={`h-full rounded-full ${progressBarColor[exp.status]}`}
+                style={{ width: `${d.progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Journey Narrative Segment */}
+          <div className="space-y-1.5 bg-muted/5 p-3 rounded-lg border border-border/20">
+            <div className="flex items-center gap-1 text-muted-foreground/40">
+              <BookOpen size={10} />
+              <SectionLabel>Journey Narrative</SectionLabel>
+            </div>
+            <p className="text-xs text-muted-foreground/80 leading-relaxed font-normal">
               {d.journeyNarrative}
             </p>
           </div>
 
-          <div className="border-t border-border/30" />
-
-          {/* Skills acquired */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                skills acquired
-              </span>
-            </div>
-            <div className="flex flex-col gap-2.5">
+          {/* Skills Acquired Bento Row */}
+          <div className="space-y-2">
+            <SectionLabel>Skills Acquired</SectionLabel>
+            <div className="grid gap-1.5">
               {d.skillGroups.map((group) => (
-                <div key={group.label}>
-                  <span className="font-mono text-[9px] text-muted-foreground/40 uppercase tracking-widest mb-1.5 block">
+                <div
+                  key={group.label}
+                  className="border border-border/20 bg-background/20 p-2 rounded flex flex-col sm:flex-row sm:items-center gap-2"
+                >
+                  <span className="font-mono text-[8px] text-primary/70 uppercase tracking-widest sm:w-16 shrink-0">
                     {group.label}
                   </span>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1">
                     {group.items.map((skill) => (
-                      <span
+                      <Chip
                         key={skill}
-                        className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-secondary/50 border border-border/40 text-foreground/70"
+                        className="bg-background/60 border-border/20 text-[9px]"
                       >
                         {skill}
-                      </span>
+                      </Chip>
                     ))}
                   </div>
                 </div>
@@ -662,31 +585,27 @@ const JourneyCard = ({ exp }: CardProps) => {
             </div>
           </div>
 
-          <div className="border-t border-border/30" />
-
-          {/* Milestones */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                milestones
-              </span>
-            </div>
-            <div className="flex flex-col gap-2">
+          {/* Milestones Checklist Container */}
+          <div className="space-y-2">
+            <SectionLabel>Milestones Path</SectionLabel>
+            <div className="grid gap-1.5 bg-secondary/15 p-3 rounded-lg border border-border/20 font-mono text-[11px]">
               {d.milestones.map((m) => (
-                <div key={m.label} className="flex items-center gap-2.5">
+                <div key={m.label} className="flex items-center gap-2">
                   {m.done ? (
                     <CheckCircle2
-                      size={13}
+                      size={11}
                       className="shrink-0 text-emerald-400"
                     />
                   ) : (
                     <Circle
-                      size={13}
+                      size={11}
                       className="shrink-0 text-muted-foreground/25"
                     />
                   )}
                   <span
-                    className={`text-sm font-mono ${m.done ? "text-foreground/80" : "text-muted-foreground/40"}`}
+                    className={
+                      m.done ? "text-foreground/80" : "text-muted-foreground/40"
+                    }
                   >
                     {m.label}
                   </span>
@@ -695,56 +614,32 @@ const JourneyCard = ({ exp }: CardProps) => {
             </div>
           </div>
 
-          <div className="border-t border-border/30" />
-
-          {/* Current focus */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-2.5">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                current focus
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {d.currentFocus.map((f) => (
-                <span
-                  key={f}
-                  className={`font-mono text-[10px] px-2 py-0.5 rounded-full border ${statusStyles[exp.status]}`}
-                >
-                  {f}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="border-t border-border/30" />
-
-          {/* Tech ecosystem */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
-                tech ecosystem
-              </span>
+          {/* Tech Ecosystem Matrix */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1 text-muted-foreground/40">
+              <Layers size={10} />
+              <SectionLabel>Tech Ecosystem</SectionLabel>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {d.techEcosystem.map((tech) => (
                 <div
                   key={tech.name}
-                  className="flex items-center gap-2.5 rounded-lg bg-secondary/30 border border-border/40 px-3 py-2"
+                  className="flex items-center gap-2 rounded bg-background/40 border border-border/30 p-1.5"
                 >
                   {tech.logo ? (
                     <img
                       src={tech.logo}
                       alt={tech.name}
-                      className="w-4 h-4 object-contain shrink-0"
+                      className="w-3.5 h-3.5 object-contain shrink-0"
                     />
                   ) : (
-                    <div className="w-4 h-4 rounded bg-secondary/80 border border-border/50 shrink-0" />
+                    <div className="w-3.5 h-3.5 rounded bg-secondary/80 border border-border/40 shrink-0" />
                   )}
-                  <div className="min-w-0">
-                    <div className="text-[11px] font-medium text-foreground/80 truncate">
+                  <div className="min-w-0 font-mono leading-tight">
+                    <div className="text-[10px] font-semibold text-foreground/80 truncate">
                       {tech.name}
                     </div>
-                    <div className="font-mono text-[9px] text-muted-foreground/50 truncate">
+                    <div className="text-[7px] text-muted-foreground/40 truncate uppercase tracking-tight">
                       {tech.category}
                     </div>
                   </div>
@@ -753,116 +648,88 @@ const JourneyCard = ({ exp }: CardProps) => {
             </div>
           </div>
 
-          <div className="border-t border-border/30" />
-
-          {/* Time investment */}
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
+          {/* Micro Footer Time Investment */}
+          <div className="grid grid-cols-2 gap-2 border-t border-border/20 pt-3 font-mono text-[10px] text-muted-foreground/50">
             <div>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 block mb-0.5">
-                started
+              <span className="text-[7px] uppercase tracking-wider block">
+                Started
               </span>
-              <span className="font-mono text-foreground/60">
+              <span className="text-foreground/60">
                 {d.timeInvestment.started}
               </span>
             </div>
             <div>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 block mb-0.5">
-                consistency
+              <span className="text-[7px] uppercase tracking-wider block">
+                Consistency
               </span>
-              <span className="font-mono text-foreground/60">
+              <span className="text-foreground/60">
                 {d.timeInvestment.consistency}
               </span>
             </div>
           </div>
 
-          <div className="border-t border-border/30" />
-
-          {/* Personal note */}
-          <div className="rounded-lg bg-secondary/20 border border-border/30 px-4 py-3.5">
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 block mb-2">
-              personal note
+          {/* Reflection Frame */}
+          <div className="relative rounded border border-primary/20 bg-primary/5 p-3 overflow-hidden">
+            <div className="absolute top-0 right-0 p-2 text-primary/5 select-none pointer-events-none">
+              <Target size={30} />
+            </div>
+            <span className="font-mono text-[8px] uppercase tracking-widest text-primary/60 block mb-0.5">
+              Reflection Note
             </span>
-            <p className="text-sm text-muted-foreground/80 leading-relaxed italic">
+            <p className="text-xs text-muted-foreground/90 leading-relaxed italic">
               "{d.personalNote}"
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 };
 
-const Labs = () => (
-  <PageTransition>
-    <div className="container pt-32 -mb-8">
-      <Reveal>
-        <div className="flex items-center gap-3 mb-8">
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
-            / journey
-          </span>
-          <span className="h-px flex-1 max-w-[80px] bg-border/60" />
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
-            roadmap
-          </span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
-          learning journey
-        </h1>
-        <p className="text-muted-foreground max-w-lg mb-12">
-          things i'm currently learning, building, and figuring out along the
-          way.
-        </p>
-      </Reveal>
+// ─── Main Linear Journey Page Component ───────────────────────────────────────
 
-      <div className="relative">
-        {/* Timeline line */}
-        <div
-          className="absolute left-[18px] sm:left-1/2 top-0 bottom-0 w-px -translate-x-1/2 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent, hsl(var(--border)) 8%, hsl(var(--border)) 92%, transparent)",
-          }}
-        />
+const Labs = () => {
+  return (
+    <PageTransition>
+      {/* Container utama diubah max-w-4xl agar layout memanjang dengan elegan */}
+      <div className="container pt-28 sm:pt-32 pb-24 px-4 sm:px-6">
+        {/* Header Section */}
+        <Reveal>
+          {/* Menghapus mx-auto agar element badge menempel penuh di kiri */}
+          <div className="flex items-center gap-3 mb-8">
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
+              / journey
+            </span>
+            <span className="h-px flex-1 max-w-[80px] bg-border/60" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/50 shrink-0">
+              {String(experiments.length).padStart(2, "0")} checkpoints
+            </span>
+          </div>
 
-        <div className="flex flex-col gap-0">
-          {experiments.map((exp, i) => {
-            const isEven = i % 2 === 0;
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-left mb-3 text-foreground">
+            learning journey
+          </h1>
+          {/* Menghapus mx-auto dan mengganti max-w-md ke max-w-xl agar deskripsi mengikuti kelebaran layout baru */}
+          <p className="text-muted-foreground text-left max-w-xl text-xs sm:text-sm leading-relaxed mb-12">
+            a strictly tracked compilation of syntax stacks and core frameworks
+            i am internalizing.
+          </p>
+        </Reveal>
 
-            return (
-              <Reveal key={exp.title} index={i}>
-                <div
-                  className={`relative flex items-start gap-0 mb-10 sm:mb-12 ${
-                    isEven ? "sm:flex-row" : "sm:flex-row-reverse"
-                  }`}
-                >
-                  {/* Card */}
-                  <div
-                    className={`
-                      w-full pl-10
-                      sm:pl-0 sm:w-[calc(50%-28px)]
-                      ${isEven ? "sm:pr-10" : "sm:pl-10"}
-                    `}
-                  >
-                    <JourneyCard exp={exp} />
-                  </div>
-
-                  {/* Timeline dot */}
-                  <div className="absolute left-[18px] sm:left-1/2 top-7 -translate-x-1/2 z-10">
-                    <div
-                      className={`w-3 h-3 rounded-full border-2 border-background transition-all duration-300 ${dotStyles[exp.status]}`}
-                    />
-                  </div>
-
-                  {/* Spacer */}
-                  <div className="hidden sm:block sm:w-[calc(50%-28px)]" />
-                </div>
-              </Reveal>
-            );
-          })}
+        {/* Linear Axis Timeline Layout - Menghapus max-w pembatas lama agar mekar ke 4xl */}
+        <div className="relative flex flex-col w-full">
+          {experiments.map((exp, i) => (
+            <RoadNode
+              key={exp.title}
+              exp={exp}
+              index={i}
+              isLast={i === experiments.length - 1}
+            />
+          ))}
         </div>
       </div>
-    </div>
-  </PageTransition>
-);
+    </PageTransition>
+  );
+};
 
 export default Labs;

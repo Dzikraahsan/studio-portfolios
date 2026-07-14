@@ -1203,7 +1203,7 @@ const Projects = () => {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
             projects
           </h1>
           <p className="text-muted-foreground max-w-xl text-sm sm:text-base leading-relaxed mb-8">
