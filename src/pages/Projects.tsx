@@ -148,6 +148,30 @@ const allProjects: Project[] = [
     liveDemo: "",
   },
   {
+    title: "Portfolio",
+    description:
+      "A personal page presenting my work, skills, and background. Designed with a dark minimal aesthetic and smooth reveal animations to create a calm, focused browsing experience.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
+    link: "https://dzii27-page.vercel.app",
+    year: "2026",
+    status: "Completed",
+    category: "Portfolio",
+    role: "Designer & Developer",
+    complexity: "Intermediate",
+    duration: "2 weeks",
+    highlights: ["Reveal Animations", "Dark Minimal", "Project Archive"],
+    learnings: ["Motion Design", "Personal Branding", "Component Architecture"],
+    challenges:
+      "Creating a design that is distinctive and personal without becoming overly decorative or distracting from the work itself.",
+    outcome:
+      "Live personal site used for professional outreach and project documentation.",
+    technologies: [
+      { label: "Frontend", items: ["React", "TypeScript", "Tailwind"] },
+      { label: "Tooling", items: ["Vite"] },
+    ],
+    liveDemo: "https://dzii27-page.vercel.app",
+  },
+  {
     title: "Paperjam Club",
     description:
       "A curated space for makers, players, and storytellers. Built as a community-first platform where creative people can share projects, discoveries, and ideas in a calm, focused environment away from algorithmic noise.",
@@ -176,30 +200,6 @@ const allProjects: Project[] = [
       { label: "Tooling", items: ["Vite"] },
     ],
     liveDemo: "",
-  },
-  {
-    title: "Portfolio",
-    description:
-      "A personal page presenting my work, skills, and background. Designed with a dark minimal aesthetic and smooth reveal animations to create a calm, focused browsing experience.",
-    tags: ["React", "Vite", "TypeScript", "Tailwind"],
-    link: "https://dzii27-page.vercel.app",
-    year: "2026",
-    status: "Completed",
-    category: "Portfolio",
-    role: "Designer & Developer",
-    complexity: "Intermediate",
-    duration: "2 weeks",
-    highlights: ["Reveal Animations", "Dark Minimal", "Project Archive"],
-    learnings: ["Motion Design", "Personal Branding", "Component Architecture"],
-    challenges:
-      "Creating a design that is distinctive and personal without becoming overly decorative or distracting from the work itself.",
-    outcome:
-      "Live personal site used for professional outreach and project documentation.",
-    technologies: [
-      { label: "Frontend", items: ["React", "TypeScript", "Tailwind"] },
-      { label: "Tooling", items: ["Vite"] },
-    ],
-    liveDemo: "https://dzii27-page.vercel.app",
   },
   {
     title: "Kaifood",

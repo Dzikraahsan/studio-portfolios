@@ -1,6 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import ShinyText from "../components/ShinyText";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -10,13 +10,14 @@ import {
   Activity,
   FolderGit2,
   Mail,
+  X,
+  CalendarDays,
+  Clock,
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import Reveal from "@/components/Reveal";
 import ProjectCard from "@/components/ProjectCard";
 import ProfileCard from "@/components/ProfileCard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHand } from "@fortawesome/free-solid-svg-icons";
 import LogoLoop from "@/components/LogoLoop";
 import {
   SiReact,
@@ -25,56 +26,178 @@ import {
   SiTailwindcss,
 } from "react-icons/si";
 
-const featuredProjects = [
-  {
-    title: "Paperjam Club",
-    description:
-      "Paperjam Club is a curated space for makers, players, and storytellers.",
-    tags: ["React", "Vite", "TypeScript", "Tailwind"],
-    link: "",
-    year: "2026",
-    status: "On Working" as const,
-  },
-  {
-    title: "Kaifood",
-    description: "A food business website that sells various menus.",
-    tags: ["React", "Vite", "TypeScript", "Tailwind"],
-    link: "https://www.kaifood.web.id/",
-    year: "2024",
-    status: "Completed" as const,
-  },
+export type ProjectStatus =
+  "Completed" | "Experimental" | "Archived" | "On Working";
+export type Complexity = "Beginner" | "Intermediate" | "Advanced";
+
+export interface TechGroup {
+  label: string;
+  items: string[];
+}
+
+export interface Project {
+  title: string;
+  description: string;
+  tags: string[];
+  link: string;
+  year: string;
+  status: ProjectStatus;
+  featured?: boolean;
+  category: string;
+  role: string;
+  complexity: Complexity;
+  duration: string;
+  highlights: string[];
+  learnings: string[];
+  challenges: string;
+  outcome: string;
+  technologies: TechGroup[];
+  repository?: string;
+  liveDemo?: string;
+}
+
+interface ProjectModalProps {
+  project: Project | null;
+  onClose: () => void;
+}
+
+const statusStyles: Record<ProjectStatus, string> = {
+  Completed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  Experimental: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  Archived: "bg-muted text-muted-foreground border-border",
+  "On Working": "bg-sky-500/10 text-sky-400 border-sky-500/20",
+};
+
+const statusDotStyles: Record<ProjectStatus, string> = {
+  Completed: "bg-emerald-400",
+  Experimental: "bg-amber-400",
+  Archived: "bg-muted-foreground",
+  "On Working": "bg-sky-400",
+};
+
+const complexityStyles: Record<Complexity, string> = {
+  Beginner: "text-muted-foreground",
+  Intermediate: "text-primary/70",
+  Advanced: "text-primary",
+};
+
+const complexityBars: Record<Complexity, number> = {
+  Beginner: 1,
+  Intermediate: 2,
+  Advanced: 3,
+};
+
+const featuredProjects: Project[] = [
   {
     title: "Finance",
     description:
-      "A personal finance website that helps users track their income and expenses.",
+      "A personal finance tracker that allows users to log income and expenses, visualise spending patterns, and understand their financial health over time with a clean dashboard interface.",
     tags: ["React", "Vite", "TypeScript", "Tailwind", "Supabase"],
     link: "https://dzii-finance.vercel.app",
-    year: "2024",
-    status: "Completed" as const,
+    year: "2025",
+    status: "Completed",
+    featured: true,
+    category: "Full Stack",
+    role: "Full Stack Developer",
+    complexity: "Advanced",
+    duration: "7 weeks",
+    highlights: ["Auth System", "Expense Tracking", "Data Visualisation"],
+    learnings: [
+      "Supabase Integration",
+      "Database Design",
+      "Auth Flows",
+      "Chart Libraries",
+    ],
+    challenges:
+      "Building a reliable financial tracking system with accurate calculations, structured data management, and meaningful visual insights across different transaction types.",
+    outcome:
+      "Successfully delivered a complete finance tracker that helps users monitor income, expenses, and spending trends through an intuitive dashboard experience.",
+    technologies: [
+      { label: "Frontend", items: ["React", "TypeScript", "Tailwind"] },
+      { label: "Backend", items: ["Supabase"] },
+      { label: "Tooling", items: ["Vite"] },
+    ],
+    liveDemo: "",
   },
-];
-
-const techLogos = [
-  { node: <SiReact size={20} />, title: "React", href: "https://react.dev" },
   {
-    node: <SiNextdotjs size={20} />,
-    title: "Next.js",
-    href: "https://nextjs.org",
+    title: "Football Terrace",
+    description:
+      "A modern football culture platform that brings together editorial storytelling, curated apparel, and an active global community. Designed to celebrate football beyond the ninety minutes through long-form journalism, matchday culture, events, and thoughtfully crafted merchandise.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind CSS"],
+    link: "",
+    year: "2026",
+    status: "On Working",
+    category: "Full Stack",
+    role: "Sole Developer",
+    complexity: "Advanced",
+    duration: "Ongoing",
+    highlights: [
+      "Editorial Football Stories",
+      "Interactive Community Platform",
+      "Premium Apparel Collection",
+      "Matchday Event Directory",
+      "Dynamic Story Routing",
+      "Product Catalog & Archive",
+      "Responsive User Experience",
+      "Modern Editorial Interface",
+    ],
+    learnings: [
+      "Scalable Frontend Architecture",
+      "Component-Driven Design",
+      "Editorial Content Modeling",
+      "Responsive Interface Design",
+      "Advanced State Management",
+      "Performance Optimization",
+      "User Experience Design",
+      "Information Architecture",
+    ],
+    challenges:
+      "Building a cohesive football platform that seamlessly combines editorial content, community engagement, and merchandise within a consistent design system. The project required balancing readability, performance, scalability, and responsive behavior while maintaining a premium editorial experience across desktop and mobile devices.",
+    outcome:
+      "Developed a scalable football culture platform that integrates long-form storytelling, community experiences, and curated apparel into a unified ecosystem. The application establishes a strong foundation for future expansion, including richer community features, enhanced editorial content, and e-commerce capabilities while preserving a consistent and immersive user experience.",
+    technologies: [
+      {
+        label: "Frontend",
+        items: ["React", "TypeScript", "Tailwind CSS", "TanStack Router"],
+      },
+      {
+        label: "Backend",
+        items: ["Supabase"],
+      },
+      {
+        label: "Tooling",
+        items: ["Vite", "ESLint", "Git", "npm"],
+      },
+    ],
+    liveDemo: "",
   },
   {
-    node: <SiTypescript size={20} />,
-    title: "TypeScript",
-    href: "https://www.typescriptlang.org",
-  },
-  {
-    node: <SiTailwindcss size={20} />,
-    title: "Tailwind CSS",
-    href: "https://tailwindcss.com",
+    title: "Portfolio",
+    description:
+      "A personal page presenting my work, skills, and background. Designed with a dark minimal aesthetic and smooth reveal animations to create a calm, focused browsing experience.",
+    tags: ["React", "Vite", "TypeScript", "Tailwind"],
+    link: "https://dzii27-page.vercel.app",
+    year: "2026",
+    status: "Completed",
+    category: "Portfolio",
+    role: "Designer & Developer",
+    complexity: "Intermediate",
+    duration: "2 weeks",
+    highlights: ["Reveal Animations", "Dark Minimal", "Project Archive"],
+    learnings: ["Motion Design", "Personal Branding", "Component Architecture"],
+    challenges:
+      "Creating a design that is distinctive and personal without becoming overly decorative or distracting from the work itself.",
+    outcome:
+      "Live personal site used for professional outreach and project documentation.",
+    technologies: [
+      { label: "Frontend", items: ["React", "TypeScript", "Tailwind"] },
+      { label: "Tooling", items: ["Vite"] },
+    ],
+    liveDemo: "https://dzii27-page.vercel.app",
   },
 ];
 
 const tools = [
-  // Code Editor
   {
     name: "Antigravity",
     subtitle: "Code Editor",
@@ -90,8 +213,6 @@ const tools = [
     subtitle: "Code Editor",
     icon: "https://cdn.simpleicons.org/zedindustries/181717/E5E7EB",
   },
-
-  // Framework
   {
     name: "React JS",
     subtitle: "Framework",
@@ -117,22 +238,16 @@ const tools = [
     subtitle: "Framework",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
   },
-
-  // Markup Language
   {
     name: "HTML5",
     subtitle: "Markup Language",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
   },
-
-  // Stylesheets
   {
     name: "CSS3",
     subtitle: "Stylesheets",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
   },
-
-  // Language
   {
     name: "JavaScript",
     subtitle: "Language",
@@ -158,8 +273,6 @@ const tools = [
     subtitle: "Language",
     icon: "https://cdn.simpleicons.org/dart",
   },
-
-  // Database
   {
     name: "MySQL",
     subtitle: "Database",
@@ -180,37 +293,26 @@ const tools = [
     subtitle: "Database",
     icon: "https://cdn.simpleicons.org/supabase",
   },
-
-  // JavaScript Runtime
   {
     name: "Node JS",
     subtitle: "JavaScript Runtime",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
   },
-
-  // Distributed Version Control System
   {
     name: "Git",
     subtitle: "DVCS",
     icon: "https://cdn.simpleicons.org/git",
   },
-
-  // Library
-
   {
     name: "TanStack",
     subtitle: "Library",
     icon: "https://cdn.simpleicons.org/tanstack/FF4154/FF6B7A",
   },
-
-  // Repository
   {
     name: "GitHub",
     subtitle: "Repository",
     icon: "https://cdn.simpleicons.org/github/181717/E5E7EB",
   },
-
-  // Deployments
   {
     name: "Vercel",
     subtitle: "Deployments",
@@ -221,7 +323,6 @@ const tools = [
     subtitle: "Deployments",
     icon: "https://cdn.simpleicons.org/railway/7B3FF2/A78BFA",
   },
-
   {
     name: "Netlify",
     subtitle: "Deployments",
@@ -232,15 +333,11 @@ const tools = [
     subtitle: "Deployments",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cloudflare/cloudflare-original.svg",
   },
-
-  // Storage
   {
     name: "Cloudinary",
     subtitle: "Storage",
     icon: "https://cdn.simpleicons.org/cloudinary/2563EB/60A5FA",
   },
-
-  // Design App
   {
     name: "Canva",
     subtitle: "Design App",
@@ -265,11 +362,264 @@ const toolLogos = tools.map((tool) => ({
   title: tool.name,
 }));
 
+const StatusBadge = ({ status }: { status: ProjectStatus }) => (
+  <span
+    className={`inline-flex shrink-0 items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-mono uppercase tracking-widest transition-colors duration-200 ${statusStyles[status]}`}
+  >
+    <span className={`h-1.5 w-1.5 rounded-full ${statusDotStyles[status]}`} />
+    {status}
+  </span>
+);
+
+const ComplexityBar = ({ level }: { level: Complexity }) => {
+  const filled = complexityBars[level];
+  return (
+    <span
+      className={`inline-flex items-center gap-0.5 ${complexityStyles[level]}`}
+    >
+      {[1, 2, 3].map((n) => (
+        <span
+          key={n}
+          className={`h-2 w-0.5 rounded-full transition-colors duration-200 ${
+            n <= filled ? "bg-current" : "bg-current/20"
+          }`}
+        />
+      ))}
+      <span className="ml-1 text-[10px] font-mono uppercase tracking-wide">
+        {level}
+      </span>
+    </span>
+  );
+};
+
+const Chip = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <span
+    className={`inline-flex items-center whitespace-nowrap text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border border-border/50 bg-background/50 text-muted-foreground transition-all duration-200 hover:-translate-y-px hover:border-border/70 ${className}`}
+    style={{ willChange: "transform" }}
+  >
+    {children}
+  </span>
+);
+
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/40 block mb-2">
+    {children}
+  </span>
+);
+
+const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (project) {
+      document.body.style.overflow = "hidden";
+      setMounted(true);
+      const animationFrame = requestAnimationFrame(() => {
+        setVisible(true);
+      });
+      return () => cancelAnimationFrame(animationFrame);
+    } else {
+      setVisible(false);
+      const timeout = setTimeout(() => {
+        setMounted(false);
+        document.body.style.overflow = "";
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [project]);
+
+  if (!mounted && !project) return null;
+
+  const demoUrl = project?.liveDemo || project?.link || null;
+
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
+        visible
+          ? "bg-background/40 backdrop-blur-md opacity-100"
+          : "bg-background/0 backdrop-blur-none opacity-0"
+      }`}
+      style={{
+        transitionTimingFunction: visible
+          ? "cubic-bezier(0.215, 0.610, 0.355, 1)"
+          : "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+      }}
+    >
+      <div className="absolute inset-0" onClick={onClose} />
+
+      {project && (
+        <div
+          className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-primary/25 bg-surface/70 backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-300 ${
+            visible
+              ? "opacity-100 scale-100 translate-y-0"
+              : "opacity-0 scale-95 translate-y-4"
+          }`}
+          style={{
+            willChange: "transform, opacity",
+            transitionTimingFunction: visible
+              ? "cubic-bezier(0.215, 0.610, 0.355, 1)"
+              : "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+          }}
+        >
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+          <div className="flex items-start justify-between p-5 sm:p-6 border-b border-border/40">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono uppercase tracking-wide text-primary/70">
+                  {project.category}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-border/60" />
+                <span className="text-[10px] font-mono text-muted-foreground/45">
+                  {project.year}
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                {project.title}
+              </h2>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div>
+              <SectionLabel>About Project</SectionLabel>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                {project.description}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-muted/10 p-4 rounded-xl border border-border/30">
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Status
+                </span>
+                <div className="mt-1">
+                  <StatusBadge status={project.status} />
+                </div>
+              </div>
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Duration
+                </span>
+                <span className="block text-xs font-mono text-foreground mt-1">
+                  {project.duration}
+                </span>
+              </div>
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Role
+                </span>
+                <span className="block text-xs font-mono text-foreground mt-1 truncate">
+                  {project.role}
+                </span>
+              </div>
+              <div>
+                <span className="block text-[10px] font-mono uppercase text-muted-foreground/50">
+                  Complexity
+                </span>
+                <div className="mt-1">
+                  <ComplexityBar level={project.complexity} />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SectionLabel>Technology Stack</SectionLabel>
+              <div className="flex flex-col gap-3 mt-2">
+                {project.technologies?.map((g) => (
+                  <div
+                    key={g.label}
+                    className="flex flex-col sm:flex-row sm:items-center gap-2"
+                  >
+                    <span className="text-[10px] font-mono text-muted-foreground/50 w-20 shrink-0 uppercase tracking-wider">
+                      {g.label}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {g.items.map((item) => (
+                        <Chip key={item} className="bg-background/40">
+                          {item}
+                        </Chip>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-5 pt-4 border-t border-border/30">
+              <div>
+                <SectionLabel>Highlights</SectionLabel>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {project.highlights?.map((h) => (
+                    <Chip key={h}>{h}</Chip>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <SectionLabel>Learnings</SectionLabel>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {project.learnings?.map((l) => (
+                    <Chip key={l}>{l}</Chip>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-5 pt-4 border-t border-border/30">
+              <div className="space-y-1">
+                <SectionLabel>Challenge</SectionLabel>
+                <p className="text-xs sm:text-sm text-muted-foreground/80 leading-relaxed">
+                  {project.challenges}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <SectionLabel>Outcome</SectionLabel>
+                <p className="text-xs sm:text-sm text-muted-foreground/80 leading-relaxed">
+                  {project.outcome}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {demoUrl && (
+            <div className="flex items-center justify-end px-5 py-4 bg-muted/20 border-t border-border/40">
+              <a
+                href={demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
+              >
+                <span>launch live site</span>
+                <ArrowUpRight size={13} />
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Index = () => {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
   return (
     <PageTransition>
       <div className="container pt-28 sm:pt-32 md:pt-36 -mb-0">
-        {/* Hero */}
         <div className="flex items-center gap-3 mb-6 -mt-4">
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
             / index
@@ -279,9 +629,9 @@ const Index = () => {
             homepage
           </span>
         </div>
+
         <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0">
           <div className="grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center">
-            {/* HERO TEXT */}
             <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
@@ -336,7 +686,6 @@ const Index = () => {
               </motion.div>
             </div>
 
-            {/* PROFILE CARD */}
             <div className="order-1 md:order-2 flex justify-center md:justify-end w-full mx-auto">
               <ProfileCard
                 avatarUrl="https://res.cloudinary.com/da4fjxm1e/image/upload/v1779339552/dzii27-trsnprnt_kvonuu_qwd8wg.png"
@@ -355,7 +704,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* LogoLoop */}
         <Reveal
           as="section"
           className="py-12 md:py-16 mt-16 md:mt-32 border-t border-border/40 overflow-hidden"
@@ -380,13 +728,11 @@ const Index = () => {
           </div>
         </Reveal>
 
-        {/* About Preview */}
         <Reveal
           as="section"
           className="py-20 md:py-24 border-t border-border/40"
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-y-10 md:gap-x-10">
-            {/* Left: Introduction */}
             <div className="md:col-span-7">
               <div className="flex items-center gap-4 mb-7">
                 <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
@@ -418,7 +764,6 @@ const Index = () => {
               </Link>
             </div>
 
-            {/* Right: Principles */}
             <aside
               aria-labelledby="about-preview-principles-label"
               className="pt-10 md:pt-0 border-t md:border-t-0 md:border-l border-border/40 md:pl-10 md:col-span-5"
@@ -507,7 +852,6 @@ const Index = () => {
           </div>
         </Reveal>
 
-        {/* Featured Projects */}
         <section className="py-16 border-t border-border/40">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
@@ -522,12 +866,16 @@ const Index = () => {
           </div>
           <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3 items-stretch">
             {featuredProjects.map((project, i) => (
-              <ProjectCard key={project.title} {...project} index={i} />
+              <ProjectCard
+                key={project.title}
+                {...project}
+                index={i}
+                onOpenDetails={(proj) => setSelectedProject(proj as Project)}
+              />
             ))}
           </div>
         </section>
 
-        {/* Quick Links */}
         <section className="py-16 border-t border-border/40">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
@@ -594,10 +942,8 @@ const Index = () => {
                 className="group relative flex flex-col rounded-xl border border-border/60 bg-surface/30 p-6 overflow-hidden transition-all duration-300 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.2)]"
                 style={{ willChange: "transform" }}
               >
-                {/* top accent line */}
                 <span className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
 
-                {/* Top: icon + label + arrow */}
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-background/60 text-primary transition-all duration-300 md:group-hover:border-primary/40 md:group-hover:scale-105">
@@ -613,7 +959,6 @@ const Index = () => {
                   />
                 </div>
 
-                {/* Title + description */}
                 <h4 className="text-lg font-semibold tracking-tight text-foreground mb-2 md:group-hover:text-primary transition-colors">
                   {title}
                 </h4>
@@ -623,10 +968,8 @@ const Index = () => {
 
                 <div className="flex-1" />
 
-                {/* Divider */}
                 <div className="h-px w-full bg-border/60 mb-4" />
 
-                {/* Metadata */}
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-mono text-muted-foreground">
                   {meta.map((m) => {
                     const MIcon = m.icon;
@@ -646,11 +989,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Closing Section */}
         <section className="pt-32 -mb-8 border-t border-border/40">
           <div className="mx-auto max-w-[1100px]">
             <div className="relative rounded-2xl border border-border/60 bg-surface/40 px-6 py-14 sm:px-12 sm:py-20 overflow-hidden">
-              {/* subtle accent */}
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.04]"
                 style={{
@@ -698,6 +1039,11 @@ const Index = () => {
           </div>
         </section>
       </div>
+
+      <ProjectModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </PageTransition>
   );
 };
