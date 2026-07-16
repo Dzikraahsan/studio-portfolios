@@ -630,8 +630,9 @@ const Index = () => {
           </span>
         </div>
 
-        <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0">
-          <div className="grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center">
+        <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0 relative">
+          <div className="grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center md:-translate-y-[3%]">
+            {/* HERO TEXT */}
             <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
@@ -672,14 +673,19 @@ const Index = () => {
               >
                 <Link
                   to="/projects"
-                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl hover:glow-sm transition-all duration-300"
+                  className="group/cta-prim inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.3)] active:scale-[0.98]"
+                  style={{ willChange: "transform" }}
                 >
-                  view projects <ArrowRight size={14} />
+                  view projects{" "}
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-300 ease-out group-hover/cta-prim:translate-x-1"
+                  />
                 </Link>
-
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl hover:border-primary/60 hover:text-primary transition-all duration-300"
+                  className="inline-flex items-center gap-2 border border-border bg-transparent text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl hover:bg-surface/50 hover:border-primary/40 hover:text-primary transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98]"
+                  style={{ willChange: "transform" }}
                 >
                   contact me
                 </Link>
@@ -732,122 +738,131 @@ const Index = () => {
           as="section"
           className="py-20 md:py-24 border-t border-border/40"
         >
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-y-10 md:gap-x-10">
-            <div className="md:col-span-7">
-              <div className="flex items-center gap-4 mb-7">
-                <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
-                  about
-                </h2>
-                <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-x-12">
+            {/* Left: Introduction */}
+            <div className="md:col-span-7 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-4 mb-7">
+                  <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
+                    about
+                  </h2>
+                  <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+                </div>
+
+                <p className="text-muted-foreground leading-[1.85] max-w-xl text-[15px] sm:text-lg mb-8">
+                  i'm a frontend developer who loves building things at the
+                  intersection of design and engineering. i believe great software
+                  is equal parts technical precision and human empathy — every
+                  interaction should feel intentional, and every detail should
+                  have a purpose.
+                </p>
+
+                <span className="font-mono text-[12px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-4">
+                   // philosophy
+                </span>
+
+                <p className="text-muted-foreground leading-[1.85] max-w-xl text-[15px] sm:text-lg mb-8">
+                  Object-oriented programming languages support encapsulation,
+                  thereby improving the ability of software to be reused, refined,
+                  tested, maintained, and extended. The full benefit of this support
+                  can only be realized if encapsulation is maximized during the design process.
+                </p>
               </div>
 
-              <p className="text-muted-foreground leading-[1.85] max-w-xl text-[15px] sm:text-lg mb-8">
-                i'm a frontend developer who loves building things at the
-                intersection of design and engineering. i believe great software
-                is equal parts technical precision and human empathy — every
-                interaction should feel intentional, and every detail should
-                have a purpose.
-              </p>
-
-              <Link
-                to="/about"
-                className="group font-mono text-xs text-primary inline-flex items-center gap-1.5 py-2 -my-2 pr-2 rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                <span className="relative">
-                  read more
-                  <span className="absolute left-0 -bottom-0.5 h-px w-full bg-primary origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
-                </span>
-                <ArrowRight
-                  size={12}
-                  className="transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                />
-              </Link>
+              <div className="mt-auto">
+                <Link
+                  to="/about"
+                  className="group font-mono text-xs text-primary inline-flex items-center gap-1.5 py-2 pr-2 rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <span className="relative">
+                    read more
+                    <span className="absolute left-0 -bottom-0.5 h-px w-full bg-primary origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                  </span>
+                  <ArrowRight
+                    size={12}
+                    className="transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                  />
+                </Link>
+              </div>
             </div>
 
+            {/* Right: Custom Supportive Sidebar (Principles, Workflow, Focus, Tech Snapshot) */}
             <aside
-              aria-labelledby="about-preview-principles-label"
-              className="pt-10 md:pt-0 border-t md:border-t-0 md:border-l border-border/40 md:pl-10 md:col-span-5"
+              aria-labelledby="about-preview-details-label"
+              className="pt-10 md:pt-0 border-t md:border-t-0 md:border-l border-border/40 md:pl-10 md:col-span-5 space-y-9"
             >
-              <h2
-                id="about-preview-principles-label"
-                className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground/60 mb-6"
-              >
-                principles
+              <h2 id="about-preview-details-label" className="sr-only">
+                about details snapshot
               </h2>
 
-              <ul className="space-y-6">
-                <motion.li
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0, ease: "easeOut" }}
-                  className="flex items-start gap-3"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-[12px] text-primary/70 tabular-nums pt-0.5"
-                  >
-                    01
-                  </span>
-                  <div>
-                    <h4 className="font-mono text-xs text-foreground tracking-wide mb-1">
-                      precision
-                    </h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      engineered down to the pixel, the easing curve, the
-                      millisecond.
-                    </p>
-                  </div>
-                </motion.li>
+              {/* 1. Principles */}
+              <div>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-4">
+                  01 // principles
+                </span>
+                <ul className="space-y-4">
+                  {[
+                    { title: "precision", desc: "pixel perfect, refined easing curves, performant execution." },
+                    { title: "clarity", desc: "hiding inner complexity behind obvious, natural interactions." },
+                    { title: "craft", desc: "caring deeply about internal details most people will never notice." },
+                  ].map((p, idx) => (
+                    <li key={p.title} className="flex items-start gap-3">
+                      <span className="font-mono text-[11px] text-primary/70 tabular-nums pt-0.5">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <h4 className="font-mono text-xs text-foreground tracking-wide mb-0.5">{p.title}</h4>
+                        <p className="text-[11px] text-muted-foreground/85 leading-relaxed">{p.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-                <motion.li
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
-                  className="flex items-start gap-3"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-[12px] text-primary/70 tabular-nums pt-0.5"
-                  >
-                    02
-                  </span>
-                  <div>
-                    <h4 className="font-mono text-xs text-foreground tracking-wide mb-1">
-                      clarity
-                    </h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      complexity hidden behind the scenes; what ships feels
-                      obvious.
-                    </p>
-                  </div>
-                </motion.li>
+              {/* 2. Workflow */}
+              <div>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-3">
+                  02 // workflow
+                </span>
+                <div className="flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-muted-foreground/75">
+                  {["think", "design", "prototype", "engineer", "ship"].map((step, idx, arr) => (
+                    <div key={step} className="flex items-center gap-1.5">
+                      <span className="text-foreground hover:text-primary transition-colors duration-200">
+                        {step}
+                      </span>
+                      {idx < arr.length - 1 && <span className="text-muted-foreground/30">→</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-                <motion.li
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-                  className="flex items-start gap-3"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-[12px] text-primary/70 tabular-nums pt-0.5"
-                  >
-                    03
-                  </span>
-                  <div>
-                    <h4 className="font-mono text-xs text-foreground tracking-wide mb-1">
-                      craft
-                    </h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      care that surfaces in the details most people never
-                      notice.
-                    </p>
-                  </div>
-                </motion.li>
-              </ul>
+              {/* 3. Current Focus */}
+              <div>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-2.5">
+                  03 // current focus
+                </span>
+                <p className="text-xs text-muted-foreground/90 leading-relaxed max-w-sm">
+                  architecting production-grade React/Vite structures, diving deeper into dynamic interactive systems, and studying visual storytelling in football culture interfaces.
+                </p>
+              </div>
+
+              {/* 4. Tech Snapshot */}
+              <div>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-3">
+                  04 // tech snapshot
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {["React", "Next.js", "TypeScript", "Tailwind CSS", "Supabase"].map((tech) => (
+                    <span
+                      key={tech}
+                      className="inline-flex items-center text-[10px] font-mono px-2 py-0.5 rounded-md border border-border/50 bg-surface/20 text-muted-foreground/80 hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-px"
+                      style={{ willChange: "transform" }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </aside>
           </div>
         </Reveal>

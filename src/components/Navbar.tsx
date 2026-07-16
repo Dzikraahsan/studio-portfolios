@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
@@ -17,6 +17,36 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const linksRef = useRef<Record<string, HTMLAnchorElement | null>>({});
+
+  const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
+
+  useEffect(() => {
+    const activeLink = linksRef.current[location.pathname];
+    const container = containerRef.current;
+
+    if (activeLink && container) {
+      const activeRect = activeLink.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      // Hitung posisi relatif 'left' terhadap container navbar
+      const relativeLeft = activeRect.left - containerRect.left;
+
+      setIndicatorStyle({
+        left: `${relativeLeft}px`,
+        width: `${activeRect.width}px`,
+        opacity: 1,
+      });
+    } else {
+      setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  }, [location.pathname]);
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
@@ -29,33 +59,40 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`font-mono text-xs tracking-wide transition-colors relative py-1 ${
-                  location.pathname === link.to
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-                {location.pathname === link.to && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute -bottom-0.5 left-0 right-0 h-px bg-primary"
-                    transition={{
-                      type: "spring",
-                      stiffness: 500,
-                      damping: 40,
-                      mass: 0.7,
-                      restDelta: 0.001,
-                    }}
-                  />
-                )}
-              </Link>
-            ))}
+          <div
+            ref={containerRef}
+            className="relative hidden md:flex items-center gap-8 h-full py-1"
+          >
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.to;
+
+              return (
+                <Link
+                  key={link.to}
+                  ref={(el) => {
+                    linksRef.current[link.to] = el;
+                  }}
+                  to={link.to}
+                  className={`font-mono text-xs tracking-wide transition-colors duration-200 relative py-1 z-10 ${
+                    isActive
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+
+            <div
+              className="absolute bottom-[1rem] h-[2px] bg-primary pointer-events-none opacity-90"
+              style={{
+                ...indicatorStyle,
+                transition: "left 320ms cubic-bezier(0.25, 1, 0.5, 1), width 320ms cubic-bezier(0.25, 1, 0.5, 1), opacity 200ms ease",
+                willChange: "left, width",
+              }}
+            />
+
             <ThemeToggle className="ml-2" />
           </div>
 
@@ -85,7 +122,6 @@ const Navbar = () => {
           >
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
 
-            {/* Main Links Container */}
             <div className="relative flex flex-col gap-2.5 w-full max-w-sm mx-auto my-auto">
               <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/45 block mb-1 pl-1">
                 / navigation menu
@@ -117,7 +153,6 @@ const Navbar = () => {
                           : "bg-surface/20 border-border/40 text-muted-foreground active:bg-surface/40 active:border-border/60 text-foreground"
                       }`}
                     >
-                      {/* Left Side: Index Indicator + Label */}
                       <div className="flex items-center gap-3">
                         <span
                           className={`text-[10px] opacity-35 ${isActive ? "text-primary font-bold" : "text-muted-foreground"}`}
@@ -127,7 +162,6 @@ const Navbar = () => {
                         <span className="tracking-wide">{link.label}</span>
                       </div>
 
-                      {/* Right Side Status Element */}
                       {isActive ? (
                         <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_2px_hsl(var(--primary)/0.4)] animate-pulse" />
                       ) : (
@@ -136,7 +170,6 @@ const Navbar = () => {
                         </span>
                       )}
 
-                      {/* Ambient Top Light Line on Active */}
                       {isActive && (
                         <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
                       )}
@@ -146,7 +179,6 @@ const Navbar = () => {
               })}
             </div>
 
-            {/* Mini Footer Mobile Menu */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -157,7 +189,7 @@ const Navbar = () => {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </  AnimatePresence>
     </>
   );
 };

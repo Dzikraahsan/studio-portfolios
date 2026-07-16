@@ -569,112 +569,6 @@ const ExpandToggle = ({
   </button>
 );
 
-// ─── Shared expanded content ──────────────────────────────────────────────────
-
-const ExpandedContent = ({ project }: { project: Project }) => (
-  <div
-    className="w-full text-left clear-both"
-    style={{ display: "block", width: "100%", minWidth: "100%" }}
-  >
-    {/* Highlights Section */}
-    <div className="mb-5 block w-full">
-      <SectionLabel>Highlights</SectionLabel>
-      <div className="flex flex-wrap gap-1.5 mt-1">
-        {project.highlights.map((h) => (
-          <Chip
-            key={h}
-            className="text-[9px] px-1.5 py-0.5 bg-background/30 hover:translate-y-0"
-          >
-            {h}
-          </Chip>
-        ))}
-      </div>
-    </div>
-
-    {/* Learnings Section */}
-    <div className="mb-5 block w-full">
-      <SectionLabel>Learnings</SectionLabel>
-      <div className="flex flex-wrap gap-1.5 mt-1">
-        {project.learnings.map((l) => (
-          <Chip
-            key={l}
-            className="text-[9px] px-1.5 py-0.5 bg-background/30 hover:translate-y-0"
-          >
-            {l}
-          </Chip>
-        ))}
-      </div>
-    </div>
-
-    <div className="h-px bg-border/20 my-4 block w-full" />
-
-    {/* ── PERBAIKAN TOTAL TANPA GRID & TANPA FLEX INDUK ── */}
-    {/* Menggunakan standar Block Layout dengan floating elements agar teks dipaksa wrap secara matematis */}
-    <div
-      className="block w-full clear-both"
-      style={{ contentVisibility: "auto" }}
-    >
-      {/* Kolom Kiri: Challenge */}
-      <div
-        className="w-full sm:w-[48%] mb-4 sm:mb-0"
-        style={{
-          display: "block",
-          float: "left",
-          maxWidth: "100%",
-          boxSizing: "border-box",
-        }}
-      >
-        <SectionLabel>Challenge</SectionLabel>
-        <p
-          className="text-[12px] sm:text-xs text-muted-foreground/80 leading-relaxed font-normal"
-          style={{
-            display: "inline-block",
-            width: "100%",
-            whiteSpace: "normal",
-            wordBreak: "break-word",
-            overflowWrap: "anywhere", // Memaksa browser memutus baris di mana saja jika menyentuh tepi
-          }}
-        >
-          {project.challenges}
-        </p>
-      </div>
-
-      {/* Spasi Pemisah Tengah khusus layar desktop */}
-      <div className="hidden sm:block" style={{ float: "left", width: "4%" }}>
-        &nbsp;
-      </div>
-
-      {/* Kolom Kanan: Outcome */}
-      <div
-        className="w-full sm:w-[48%]"
-        style={{
-          display: "block",
-          float: "left",
-          maxWidth: "100%",
-          boxSizing: "border-box",
-        }}
-      >
-        <SectionLabel>Outcome</SectionLabel>
-        <p
-          className="text-[12px] sm:text-xs text-muted-foreground/80 leading-relaxed font-normal"
-          style={{
-            display: "inline-block",
-            width: "100%",
-            whiteSpace: "normal",
-            wordBreak: "break-word",
-            overflowWrap: "anywhere", // Memaksa browser memutus baris di mana saja jika menyentuh tepi
-          }}
-        >
-          {project.outcome}
-        </p>
-      </div>
-
-      {/* Reset float tag agar background kartu tidak rusak */}
-      <div style={{ clear: "both", display: "block", height: 0 }}></div>
-    </div>
-  </div>
-);
-
 // ─── Metadata row ─────────────────────────────────────────────────────────────
 
 const MetaRow = ({ project }: { project: Project }) => (
@@ -880,7 +774,7 @@ export const ProjectCard = ({
     <Reveal index={index}>
       <div
         onClick={() => onOpenDetails(project)}
-        className="flex flex-col h-full rounded-2xl border border-border/50 bg-surface/20 md:hover:border-border/80 md:hover:bg-surface/30 md:hover:-translate-y-1 transition-all duration-250 cursor-pointer overflow-hidden group"
+        className="flex flex-col h-full rounded-2xl border border-border/40 bg-surface/10 md:hover:border-border/70 md:hover:bg-surface/20 md:hover:shadow-[0_8px_30px_-12px_hsl(var(--primary)/0.08)] md:hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer overflow-hidden group w-full"
         style={{ willChange: "transform" }}
       >
         {/* Main Card Body */}
@@ -888,24 +782,27 @@ export const ProjectCard = ({
           {/* Header Area */}
           <div className="flex items-start justify-between gap-4 mb-3">
             <div className="min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono text-muted-foreground/30">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] font-mono text-muted-foreground/30 select-none">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span className="h-1.5 w-1.5 rounded-full bg-border/60" />
-                <span className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground/45">
+                <span className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground/45 truncate">
                   {project.category}
                 </span>
               </div>
-              <h3 className="text-lg font-semibold tracking-tight text-foreground truncate group-hover:text-primary transition-colors duration-200">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground truncate group-hover:text-primary transition-colors duration-300">
                 {project.title}
               </h3>
             </div>
-            <StatusBadge status={project.status} />
+
+            <div className="shrink-0 -mt-[0.5rem]">
+              <StatusBadge status={project.status} />
+            </div>
           </div>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6 line-clamp-3 flex-1">
+          <p className="text-sm text-muted-foreground/80 leading-relaxed mb-6 line-clamp-3 flex-1">
             {project.description}
           </p>
 
@@ -937,12 +834,12 @@ export const ProjectCard = ({
           </div>
         </div>
 
-        {/* Footer Actions (Static links pointing to Modal) */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-muted/10 border-t border-border/35 mt-auto">
-          <button className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-200">
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between px-5 py-3.5 bg-muted/5 border-t border-border/25 mt-auto transition-colors duration-300 md:group-hover:bg-muted/10">
+          <button className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-300">
             <ChevronDown
               size={12}
-              className="-rotate-90 group-hover:translate-x-0.5 transition-transform"
+              className="-rotate-90 transition-transform duration-300 ease-out md:group-hover:translate-x-0.5 md:group-hover:text-primary"
             />
             <span>view details</span>
           </button>
@@ -952,12 +849,15 @@ export const ProjectCard = ({
               href={demoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()} // Supaya tidak men-trigger click modal
-              className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-all duration-200 hover:-translate-y-0.5"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-all duration-300 hover:-translate-y-0.5 ease-out"
               style={{ willChange: "transform" }}
             >
               <span>live demo</span>
-              <ArrowUpRight size={12} />
+              <ArrowUpRight
+                size={12}
+                className="transition-transform duration-300 ease-out md:group-hover:-translate-y-0.5 md:group-hover:translate-x-0.5"
+              />
             </a>
           )}
         </div>
