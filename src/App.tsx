@@ -60,11 +60,14 @@ const App = () => (
             easing="ease-out"
           >
             <div className="min-h-screen flex flex-col relative overflow-hidden">
-              <div className="absolute inset-0 -z-10 bg-background"></div>
+              <a href="#main-content" className="skip-to-content">
+                Skip to main content
+              </a>
+              <div className="absolute inset-0 -z-10 bg-background" aria-hidden="true"></div>
 
               <Navbar />
 
-              <main className="flex-1">
+              <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
                 <AnimatedRoutes />
               </main>
 
