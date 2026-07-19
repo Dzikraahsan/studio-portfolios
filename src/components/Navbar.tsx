@@ -121,18 +121,22 @@ const Navbar = () => {
           </div>
 
           {/* Mobile actions */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center">
             <ThemeToggle />
             <button
               ref={menuButtonRef}
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="text-foreground p-1 min-h-11 min-w-11 inline-flex items-center justify-center rounded-md"
+              className="text-foreground min-h-11 min-w-11 inline-flex items-center justify-end pr-1 rounded-md transition-colors duration-200 active:bg-surface/30 focus:outline-none"
               aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-menu"
             >
-              {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+              {mobileOpen ? (
+                <X size={18} aria-hidden="true" />
+              ) : (
+                <Menu size={18} aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
