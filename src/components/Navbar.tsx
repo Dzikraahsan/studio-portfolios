@@ -16,6 +16,7 @@ const navLinks = [
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<Record<string, HTMLAnchorElement | null>>({});
@@ -47,9 +48,31 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
+  // Close mobile menu on route change and restore focus to the toggle button
+  useEffect(() => {
+    if (mobileOpen) {
+      setMobileOpen(false);
+      menuButtonRef.current?.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Escape key closes the mobile menu
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
+      <nav aria-label="Primary" className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container flex items-center justify-between h-14">
           <Link
             to="/"
@@ -73,7 +96,8 @@ const Navbar = () => {
                     linksRef.current[link.to] = el;
                   }}
                   to={link.to}
-                  className={`font-mono text-xs tracking-wide transition-colors duration-200 relative py-1 z-10 ${
+                  aria-current={isActive ? "page" : undefined}
+                  className={`font-mono text-xs tracking-wide transition-colors duration-200 relative py-1 z-10 rounded-sm ${
                     isActive
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
@@ -100,11 +124,15 @@ const Navbar = () => {
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
+              ref={menuButtonRef}
+              type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="text-foreground p-1"
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              className="text-foreground p-1 min-h-11 min-w-11 inline-flex items-center justify-center rounded-md"
+              aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav-menu"
             >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -114,6 +142,10 @@ const Navbar = () => {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-nav-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -147,6 +179,7 @@ const Navbar = () => {
                     <Link
                       to={link.to}
                       onClick={() => setMobileOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
                       className={`group relative flex items-center justify-between w-full p-4 rounded-xl border font-mono text-sm transition-all duration-200 ${
                         isActive
                           ? "bg-primary/5 border-primary/25 text-primary"
