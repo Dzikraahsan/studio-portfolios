@@ -16,6 +16,7 @@ const navLinks = [
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<Record<string, HTMLAnchorElement | null>>({});
