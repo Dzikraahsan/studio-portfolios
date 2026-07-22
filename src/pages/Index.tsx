@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo, memo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -11,8 +11,14 @@ import {
   FolderGit2,
   Mail,
   X,
+  MapPin,
+  Code2,
+  Terminal,
+  Sparkles,
   CalendarDays,
   Clock,
+  User2,
+  LucideIcon,
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import Reveal from "@/components/Reveal";
@@ -20,14 +26,19 @@ import ProjectCard from "@/components/ProjectCard";
 import ProfileCard from "@/components/ProfileCard";
 import LogoLoop from "@/components/LogoLoop";
 import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-} from "react-icons/si";
+  MOTION_OFFSET,
+  MOTION_DURATION,
+  MOTION_EASE,
+  getRevealTransition,
+} from "@/lib/motion";
+
+// ─── Types & Interfaces ───────────────────────────────────────────────────────
 
 export type ProjectStatus =
-  "Completed" | "Experimental" | "Archived" | "On Working";
+  | "Completed"
+  | "Experimental"
+  | "Archived"
+  | "On Working";
 export type Complexity = "Beginner" | "Intermediate" | "Advanced";
 
 export interface TechGroup {
@@ -61,6 +72,8 @@ interface ProjectModalProps {
   onClose: () => void;
 }
 
+// ─── Design System Tokens ─────────────────────────────────────────────────────
+
 const statusStyles: Record<ProjectStatus, string> = {
   Completed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   Experimental: "bg-amber-500/10 text-amber-400 border-amber-500/20",
@@ -87,7 +100,9 @@ const complexityBars: Record<Complexity, number> = {
   Advanced: 3,
 };
 
-const featuredProjects: Project[] = [
+// ─── Data Static Tokens ───────────────────────────────────────────────────────
+
+const FEATURED_PROJECTS: readonly Project[] = [
   {
     title: "Finance",
     description:
@@ -195,9 +210,9 @@ const featuredProjects: Project[] = [
     ],
     liveDemo: "https://dzii27-page.vercel.app",
   },
-];
+] as const;
 
-const tools = [
+const TOOLS = [
   {
     name: "Antigravity",
     subtitle: "Code Editor",
@@ -348,30 +363,72 @@ const tools = [
     subtitle: "Design App",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
   },
-];
+] as const;
 
-const toolLogos = tools.map((tool) => ({
-  node: (
-    <img
-      src={tool.icon}
-      alt={tool.name}
-      className="w-7 h-7 object-contain opacity-100 brightness-125 transition"
-      loading="lazy"
-    />
-  ),
-  title: tool.name,
-}));
+const EXPLORE_SECTIONS = [
+  {
+    to: "/projects",
+    label: "projects",
+    title: "Projects",
+    description:
+      "a curated archive of things i've built — from quick experiments to full-stack applications. each entry is shipped, learned from, and documented.",
+    icon: FolderGit2,
+    meta: [
+      { icon: Layers, text: "9 projects" },
+      { icon: Activity, text: "craft & code" },
+    ],
+  },
+  {
+    to: "/journey",
+    label: "journey",
+    title: "Learning Journey",
+    description:
+      "things i'm currently learning, building, and figuring out along the way.",
+    icon: BookOpen,
+    meta: [
+      { icon: Layers, text: "5 entries" },
+      { icon: Activity, text: "active" },
+    ],
+  },
+  {
+    to: "/legacy",
+    label: "legacy",
+    title: "Legacy",
+    description:
+      "an archive of past projects, experiments, and systems i've moved on from.",
+    icon: Archive,
+    meta: [
+      { icon: Layers, text: "8 records" },
+      { icon: Activity, text: "archive" },
+    ],
+  },
+  {
+    to: "/contact",
+    label: "contact",
+    title: "Contact",
+    description:
+      "have a project in mind, a question, or just want to say hi? i'd love to hear from you.",
+    icon: Mail,
+    meta: [
+      { icon: Layers, text: "form & quick info" },
+      { icon: Activity, text: "connect" },
+    ],
+  },
+] as const;
 
-const StatusBadge = ({ status }: { status: ProjectStatus }) => (
+// ─── Shared UI Helpers ────────────────────────────────────────────────────────
+
+const StatusBadge = memo(({ status }: { status: ProjectStatus }) => (
   <span
     className={`inline-flex shrink-0 items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-mono uppercase tracking-widest transition-colors duration-200 ${statusStyles[status]}`}
   >
     <span className={`h-1.5 w-1.5 rounded-full ${statusDotStyles[status]}`} />
     {status}
   </span>
-);
+));
+StatusBadge.displayName = "StatusBadge";
 
-const ComplexityBar = ({ level }: { level: Complexity }) => {
+const ComplexityBar = memo(({ level }: { level: Complexity }) => {
   const filled = complexityBars[level];
   return (
     <span
@@ -390,50 +447,74 @@ const ComplexityBar = ({ level }: { level: Complexity }) => {
       </span>
     </span>
   );
-};
+});
+ComplexityBar.displayName = "ComplexityBar";
 
-const Chip = ({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => (
-  <span
-    className={`inline-flex items-center whitespace-nowrap text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border border-border/50 bg-background/50 text-muted-foreground transition-all duration-200 hover:-translate-y-px hover:border-border/70 ${className}`}
-    style={{ willChange: "transform" }}
-  >
-    {children}
-  </span>
+const Chip = memo(
+  ({
+    children,
+    className = "",
+  }: {
+    children: React.ReactNode;
+    className?: string;
+  }) => (
+    <span
+      className={`inline-flex items-center whitespace-nowrap text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border border-border/50 bg-background/50 text-muted-foreground transition-all duration-200 hover:-translate-y-px hover:border-border/70 ${className}`}
+      style={{ willChange: "transform" }}
+    >
+      {children}
+    </span>
+  )
 );
+Chip.displayName = "Chip";
 
-const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+const SectionLabel = memo(({ children }: { children: React.ReactNode }) => (
   <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/40 block mb-2">
     {children}
   </span>
-);
+));
+SectionLabel.displayName = "SectionLabel";
 
-const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+// ─── Project Modal Component ──────────────────────────────────────────────────
+
+const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
+  // Body Scroll Locking & Cleanup
   useEffect(() => {
     if (project) {
       document.body.style.overflow = "hidden";
       setMounted(true);
-      const animationFrame = requestAnimationFrame(() => {
-        setVisible(true);
-      });
-      return () => cancelAnimationFrame(animationFrame);
+
+      const frame = requestAnimationFrame(() => setVisible(true));
+      return () => {
+        cancelAnimationFrame(frame);
+        document.body.style.overflow = "";
+      };
     } else {
       setVisible(false);
-      const timeout = setTimeout(() => {
-        setMounted(false);
-        document.body.style.overflow = "";
-      }, 200);
-      return () => clearTimeout(timeout);
+      const timer = setTimeout(() => setMounted(false), 200);
+      return () => clearTimeout(timer);
     }
   }, [project]);
+
+  // Focus Close Button on Mount
+  useEffect(() => {
+    if (visible) closeBtnRef.current?.focus();
+  }, [visible]);
+
+  // Accessibility: Keyboard Escape listener
+  useEffect(() => {
+    if (!project) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [project, onClose]);
 
   if (!mounted && !project) return null;
 
@@ -441,6 +522,9 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-index-project-title"
       className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
         visible
           ? "bg-background/40 backdrop-blur-md opacity-100"
@@ -448,11 +532,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
       }`}
       style={{
         transitionTimingFunction: visible
-          ? "cubic-bezier(0.215, 0.610, 0.355, 1)"
+          ? `cubic-bezier(${MOTION_EASE.OUT_SMOOTH.join(",")})`
           : "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
       }}
     >
-      <div className="absolute inset-0" onClick={onClose} />
+      <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
 
       {project && (
         <div
@@ -464,7 +548,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
           style={{
             willChange: "transform, opacity",
             transitionTimingFunction: visible
-              ? "cubic-bezier(0.215, 0.610, 0.355, 1)"
+              ? `cubic-bezier(${MOTION_EASE.OUT_SMOOTH.join(",")})`
               : "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
           }}
         >
@@ -481,16 +565,22 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   {project.year}
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+              <h2
+                id="modal-index-project-title"
+                className="text-xl sm:text-2xl font-bold tracking-tight text-foreground"
+              >
                 {project.title}
               </h2>
             </div>
 
             <button
+              ref={closeBtnRef}
+              type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200"
+              aria-label="Close project details modal"
+              className="p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
 
@@ -601,10 +691,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 href={demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span>launch live site</span>
-                <ArrowUpRight size={13} />
+                <ArrowUpRight size={13} aria-hidden="true" />
               </a>
             </div>
           )}
@@ -612,14 +702,43 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
       )}
     </div>
   );
-};
+});
+ProjectModal.displayName = "ProjectModal";
+
+// ─── Main Index Component ─────────────────────────────────────────────────────
 
 const Index = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+  // Memoized Logo Loop Nodes
+  const toolLogos = useMemo(
+    () =>
+      TOOLS.map((tool) => ({
+        node: (
+          <img
+            src={tool.icon}
+            alt={tool.name}
+            className="w-7 h-7 object-contain opacity-100 brightness-125 transition"
+            loading="lazy"
+          />
+        ),
+        title: tool.name,
+      })),
+    []
+  );
+
+  const handleOpenDetails = useCallback((proj: Project) => {
+    setSelectedProject(proj);
+  }, []);
+
+  const handleCloseDetails = useCallback(() => {
+    setSelectedProject(null);
+  }, []);
+
   return (
     <PageTransition>
       <div className="container pt-28 sm:pt-32 md:pt-36 -mb-0">
+        {/* Index Breadcrumb Marker */}
         <div className="flex items-center gap-3 mb-6 -mt-4">
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60">
             / index
@@ -630,68 +749,160 @@ const Index = () => {
           </span>
         </div>
 
-        <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-0 relative">
-          <div className="grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center md:-translate-y-[3%]">
-            {/* HERO TEXT */}
-            <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="font-mono text-xs text-primary mb-5 tracking-[0.24em] uppercase"
-              >
-                frontend developer
-              </motion.p>
+        {/* Hero Section */}
+        <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-4 relative overflow-visible">
+          {/* ── Ambient Background Glow Decorator ── */}
+          <div
+            className="pointer-events-none absolute -top-12 -left-12 w-96 h-96 bg-primary/10 rounded-full blur-[120px] opacity-50 z-0"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute top-1/2 -right-12 w-80 h-80 bg-primary/5 rounded-full blur-[100px] opacity-40 z-0"
+            aria-hidden="true"
+          />
 
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
+          {/* ── Grid Container ── */}
+          <div className="relative z-10 grid gap-12 sm:gap-14 md:gap-12 md:grid-cols-[1fr_auto] md:items-center md:-translate-y-[2%]">
+
+            {/* ── HERO TEXT CONTENT ── */}
+            <div className="order-2 md:order-1 flex flex-col justify-center pt-2 md:pt-0">
+
+              {/* 1. Live Availability Badge & Role Label */}
+              <motion.div
+                initial={{ opacity: 0, y: MOTION_OFFSET.SM }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-4xl sm:text-5xl font-bold leading-[1.05] tracking-tight mb-7 max-w-2xl"
+                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.05)}
+                className="flex flex-wrap items-center gap-2.5 mb-5"
+              >
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px] font-mono tracking-wider uppercase">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  available for work
+                </div>
+
+                <span className="text-muted-foreground/30 text-xs font-mono" aria-hidden="true">
+                  •
+                </span>
+
+                <span className="font-mono text-xs text-primary tracking-[0.24em] uppercase font-medium">
+                  frontend web developer
+                </span>
+              </motion.div>
+
+              {/* 2. Main Title Heading */}
+              <motion.h1
+                initial={{ opacity: 0, y: MOTION_OFFSET.MD }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.15)}
+                className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-6 max-w-2xl"
               >
                 hi, i'm{" "}
                 <span className="text-gradient font-bold pr-1">Dzikra</span>{" "}
                 <span className="wave">👋</span>
               </motion.h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
+              {/* 3. Contextual Metadata Quick-Pills */}
+              <motion.div
+                initial={{ opacity: 0, y: MOTION_OFFSET.SM }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-[15px] sm:text-lg text-muted-foreground max-w-xl leading-[1.9] mb-10"
+                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.22)}
+                className="flex flex-wrap items-center gap-2 mb-6 text-[11px] font-mono text-muted-foreground/80"
+              >
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-border/50 bg-surface/30">
+                  <MapPin size={12} className="text-primary shrink-0" />
+                  Majalengka, ID
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-border/50 bg-surface/30">
+                  <Clock size={12} className="text-primary shrink-0" />
+                  WIB (UTC+7)
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-border/50 bg-surface/30">
+                  <Code2 size={12} className="text-primary shrink-0" />
+                  React • TypeScript • Tailwind
+                </span>
+              </motion.div>
+
+              {/* 4. Paragraph Bio */}
+              <motion.p
+                initial={{ opacity: 0, y: MOTION_OFFSET.MD }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.3)}
+                className="text-[15px] sm:text-lg text-muted-foreground max-w-xl leading-[1.85] mb-9"
               >
                 i build modern, scalable, and user-focused web applications.
                 passionate about clean code, great design, and solving real
                 problems with technology.
               </motion.p>
 
+              {/* 5. Call To Action Button Group */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: MOTION_OFFSET.MD }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="flex flex-wrap gap-3"
+                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.4)}
+                className="flex flex-wrap items-center gap-3.5 mb-11"
               >
                 <Link
                   to="/projects"
-                  className="group/cta-prim inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.3)] active:scale-[0.98]"
+                  className="group/cta-prim inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3.5 rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_hsl(var(--primary)/0.35)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   style={{ willChange: "transform" }}
                 >
-                  view projects{" "}
+                  <span>view projects</span>
                   <ArrowRight
                     size={14}
                     className="transition-transform duration-300 ease-out group-hover/cta-prim:translate-x-1"
+                    aria-hidden="true"
                   />
                 </Link>
+
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-border bg-transparent text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3 rounded-xl hover:bg-surface/50 hover:border-primary/40 hover:text-primary transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98]"
+                  className="inline-flex items-center gap-2 border border-border/70 bg-surface/20 text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3.5 rounded-xl hover:bg-surface/60 hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   style={{ willChange: "transform" }}
                 >
                   contact me
                 </Link>
               </motion.div>
+
+              {/* 6. Mini Metrics Counter Strip */}
+              <motion.div
+                initial={{ opacity: 0, y: MOTION_OFFSET.SM }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.48)}
+                className="pt-6 border-t border-border/40 grid grid-cols-3 gap-4 max-w-lg"
+              >
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-mono text-xs text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
+                    <FolderGit2 size={11} className="text-primary" /> projects
+                  </span>
+                  <span className="font-bold text-lg text-foreground tracking-tight">
+                    9+ <span className="text-xs text-primary font-mono font-normal">shipped</span>
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-mono text-xs text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
+                    <Terminal size={11} className="text-primary" /> stack
+                  </span>
+                  <span className="font-bold text-lg text-foreground tracking-tight">
+                    12+ <span className="text-xs text-primary font-mono font-normal">tools</span>
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-mono text-xs text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
+                    <Sparkles size={11} className="text-primary" /> status
+                  </span>
+                  <span className="font-bold text-lg text-foreground tracking-tight">
+                    Active <span className="text-xs text-emerald-400 font-mono font-normal">• 2026</span>
+                  </span>
+                </div>
+              </motion.div>
+
             </div>
 
+            {/* ── PROFILE CARD SIDEBAR ── */}
             <div className="order-1 md:order-2 flex justify-center md:justify-end w-full mx-auto">
               <ProfileCard
                 avatarUrl="https://res.cloudinary.com/da4fjxm1e/image/upload/v1779339552/dzii27-trsnprnt_kvonuu_qwd8wg.png"
@@ -707,9 +918,11 @@ const Index = () => {
                 className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] mx-auto md:mx-0"
               />
             </div>
+
           </div>
         </section>
 
+        {/* Tech Stack Logo Infinite Loop */}
         <Reveal
           as="section"
           className="py-12 md:py-16 mt-16 md:mt-32 border-t border-border/40 overflow-hidden"
@@ -717,9 +930,9 @@ const Index = () => {
           <div
             className="relative w-full overflow-hidden
             before:absolute before:left-0 before:top-0 before:h-full before:w-24
-            before:bg-gradient-to-r before:from-background before:to-transparent
+            before:bg-gradient-to-r before:from-background before:to-transparent before:z-10
             after:absolute after:right-0 after:top-0 after:h-full after:w-24
-            after:bg-gradient-to-l after:from-background after:to-transparent"
+            after:bg-gradient-to-l after:from-background after:to-transparent after:z-10"
           >
             <div className="relative h-[32px] flex items-center">
               <LogoLoop
@@ -734,12 +947,13 @@ const Index = () => {
           </div>
         </Reveal>
 
+        {/* About Section Preview */}
         <Reveal
           as="section"
           className="py-20 md:py-24 border-t border-border/40"
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-x-12">
-            {/* Left: Introduction */}
+            {/* Left: Introduction Text */}
             <div className="md:col-span-7 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-7">
@@ -758,7 +972,7 @@ const Index = () => {
                 </p>
 
                 <span className="font-mono text-[12px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-4">
-                   // philosophy
+                  // philosophy
                 </span>
 
                 <p className="text-muted-foreground leading-[1.85] max-w-xl text-[15px] sm:text-lg mb-8">
@@ -781,12 +995,13 @@ const Index = () => {
                   <ArrowRight
                     size={12}
                     className="transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                    aria-hidden="true"
                   />
                 </Link>
               </div>
             </div>
 
-            {/* Right: Custom Supportive Sidebar (Principles, Workflow, Focus, Tech Snapshot) */}
+            {/* Right: Principles & Focus Sidebar */}
             <aside
               aria-labelledby="about-preview-details-label"
               className="pt-10 md:pt-0 border-t md:border-t-0 md:border-l border-border/40 md:pl-10 md:col-span-5 space-y-9"
@@ -811,7 +1026,7 @@ const Index = () => {
                         {String(idx + 1).padStart(2, "0")}
                       </span>
                       <div>
-                        <h4 className="font-mono text-xs text-foreground tracking-wide mb-0.5">{p.title}</h4>
+                        <h3 className="font-mono text-xs text-foreground tracking-wide mb-0.5">{p.title}</h3>
                         <p className="text-[11px] text-muted-foreground/85 leading-relaxed">{p.desc}</p>
                       </div>
                     </li>
@@ -830,7 +1045,7 @@ const Index = () => {
                       <span className="text-foreground hover:text-primary transition-colors duration-200">
                         {step}
                       </span>
-                      {idx < arr.length - 1 && <span className="text-muted-foreground/30">→</span>}
+                      {idx < arr.length - 1 && <span className="text-muted-foreground/30" aria-hidden="true">→</span>}
                     </div>
                   ))}
                 </div>
@@ -867,6 +1082,7 @@ const Index = () => {
           </div>
         </Reveal>
 
+        {/* Featured Projects Grid */}
         <section className="py-20 border-t border-border/40">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
@@ -874,87 +1090,39 @@ const Index = () => {
             </h2>
             <Link
               to="/projects"
-              className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+              className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
             >
-              view all <ArrowRight size={12} />
+              view all <ArrowRight size={12} aria-hidden="true" />
             </Link>
           </div>
           <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3 items-stretch">
-            {featuredProjects.map((project, i) => (
+            {FEATURED_PROJECTS.map((project, i) => (
               <ProjectCard
                 key={project.title}
                 {...project}
                 index={i}
-                onOpenDetails={(proj) => setSelectedProject(proj as Project)}
+                onOpenDetails={(proj) => handleOpenDetails(proj as Project)}
               />
             ))}
           </div>
         </section>
 
+        {/* Explore Hub Section */}
         <section className="py-20 border-t border-border/40">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
               explore more
             </h2>
             <span className="font-mono text-[10px] text-muted-foreground tracking-wider uppercase">
-              2 sections
+              {EXPLORE_SECTIONS.length} sections
             </span>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            {[
-              {
-                to: "/projects",
-                label: "projects",
-                title: "Projects",
-                description:
-                  "a curated archive of things i've built — from quick experiments to full-stack applications. each entry is shipped, learned from, and documented.",
-                icon: FolderGit2,
-                meta: [
-                  { icon: Layers, text: "9 projects" },
-                  { icon: Activity, text: "craft & code" },
-                ],
-              },
-              {
-                to: "/journey",
-                label: "journey",
-                title: "Learning Journey",
-                description:
-                  "things i'm currently learning, building, and figuring out along the way.",
-                icon: BookOpen,
-                meta: [
-                  { icon: Layers, text: "5 entries" },
-                  { icon: Activity, text: "active" },
-                ],
-              },
-              {
-                to: "/legacy",
-                label: "legacy",
-                title: "Legacy",
-                description:
-                  "an archive of past projects, experiments, and systems i've moved on from.",
-                icon: Archive,
-                meta: [
-                  { icon: Layers, text: "8 records" },
-                  { icon: Activity, text: "archive" },
-                ],
-              },
-              {
-                to: "/contact",
-                label: "contact",
-                title: "Contact",
-                description:
-                  "have a project in mind, a question, or just want to say hi? i'd love to hear from you.",
-                icon: Mail,
-                meta: [
-                  { icon: Layers, text: "form & quick info" },
-                  { icon: Activity, text: "connect" },
-                ],
-              },
-            ].map(({ to, label, title, description, icon: Icon, meta }) => (
+            {EXPLORE_SECTIONS.map(({ to, label, title, description, icon: Icon, meta }) => (
               <Link
                 key={to}
                 to={to}
-                className="group relative flex flex-col rounded-xl border border-border/60 bg-surface/30 p-6 overflow-hidden transition-all duration-300 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.2)]"
+                className="group relative flex flex-col rounded-xl border border-border/60 bg-surface/30 p-6 overflow-hidden transition-all duration-300 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 style={{ willChange: "transform" }}
               >
                 <span className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
@@ -962,7 +1130,7 @@ const Index = () => {
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-background/60 text-primary transition-all duration-300 md:group-hover:border-primary/40 md:group-hover:scale-105">
-                      <Icon size={16} />
+                      <Icon size={16} aria-hidden="true" />
                     </div>
                     <h3 className="font-mono text-xs text-primary tracking-widest uppercase">
                       {label}
@@ -970,6 +1138,7 @@ const Index = () => {
                   </div>
                   <ArrowUpRight
                     size={16}
+                    aria-hidden="true"
                     className="shrink-0 text-muted-foreground transition-all duration-300 md:group-hover:text-primary md:group-hover:-translate-y-0.5 md:group-hover:translate-x-0.5"
                   />
                 </div>
@@ -993,7 +1162,7 @@ const Index = () => {
                         key={m.text}
                         className="inline-flex items-center gap-1.5"
                       >
-                        <MIcon size={11} />
+                        <MIcon size={11} aria-hidden="true" />
                         {m.text}
                       </span>
                     );
@@ -1004,11 +1173,13 @@ const Index = () => {
           </div>
         </section>
 
+        {/* CTA Callout Banner */}
         <section className="pt-20 pb-2 border-t border-border/40">
           <div className="mx-auto max-w-[1100px]">
             <div className="relative rounded-2xl border border-border/60 bg-surface/40 px-6 py-14 sm:px-12 sm:py-20 overflow-hidden">
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                aria-hidden="true"
                 style={{
                   backgroundImage:
                     "radial-gradient(circle at 20% 0%, hsl(var(--primary)) 0%, transparent 40%), radial-gradient(circle at 80% 100%, hsl(var(--primary)) 0%, transparent 40%)",
@@ -1032,13 +1203,13 @@ const Index = () => {
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <Link
                     to="/contact"
-                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:glow-sm transition-all duration-300"
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:glow-sm transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    get in touch <ArrowRight size={14} />
+                    get in touch <ArrowRight size={14} aria-hidden="true" />
                   </Link>
                   <Link
                     to="/projects"
-                    className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:border-primary/60 hover:text-primary transition-all duration-300"
+                    className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:border-primary/60 hover:text-primary transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     explore work
                   </Link>
@@ -1055,9 +1226,10 @@ const Index = () => {
         </section>
       </div>
 
+      {/* Shared Floating Modal */}
       <ProjectModal
         project={selectedProject}
-        onClose={() => setSelectedProject(null)}
+        onClose={handleCloseDetails}
       />
     </PageTransition>
   );
