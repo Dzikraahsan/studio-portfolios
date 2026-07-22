@@ -702,7 +702,7 @@ const RoadNode = ({ exp, index, isLast }: RoadNodeProps) => {
 const Labs = () => {
   return (
     <PageTransition>
-      <div className="container pt-28 sm:pt-32 -mb-[50px]">
+      <div className="container pt-28 sm:pt-32 -mb-11">
         {/* Header Section */}
         <Reveal>
           <div className="flex items-center gap-3 mb-8">

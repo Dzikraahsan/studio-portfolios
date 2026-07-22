@@ -867,7 +867,7 @@ const Index = () => {
           </div>
         </Reveal>
 
-        <section className="py-16 border-t border-border/40">
+        <section className="py-20 border-t border-border/40">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
               featured projects
@@ -891,7 +891,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-16 border-t border-border/40">
+        <section className="py-20 border-t border-border/40">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-xs text-primary tracking-widest uppercase">
               explore more
@@ -1004,7 +1004,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="pt-32 border-t border-border/40">
+        <section className="pt-20 pb-2 border-t border-border/40">
           <div className="mx-auto max-w-[1100px]">
             <div className="relative rounded-2xl border border-border/60 bg-surface/40 px-6 py-14 sm:px-12 sm:py-20 overflow-hidden">
               <div
