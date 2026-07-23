@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, memo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -735,6 +736,24 @@ const Index = () => {
     setSelectedProject(null);
   }, []);
 
+  const isMobile = useIsMobile();
+
+  const heroTransition = (delay: number) =>
+    getRevealTransition(
+      isMobile ? MOTION_DURATION.FAST : MOTION_DURATION.NORMAL,
+      isMobile ? Math.min(delay * 0.25, 0.06) : delay
+    );
+
+  const heroInitial = (offset: number) => ({
+    opacity: 0,
+    y: isMobile ? Math.min(offset, MOTION_OFFSET.SM) : offset,
+  });
+
+  const heroAnimate = {
+    opacity: 1,
+    y: 0,
+  };
+
   return (
     <PageTransition>
       <div className="container pt-28 sm:pt-32 md:pt-36 -mb-0">
@@ -769,9 +788,9 @@ const Index = () => {
 
               {/* 1. Live Availability Badge & Role Label */}
               <motion.div
-                initial={{ opacity: 0, y: MOTION_OFFSET.SM }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.05)}
+                initial={heroInitial(MOTION_OFFSET.SM)}
+                animate={heroAnimate}
+                transition={heroTransition(0.05)}
                 className="flex flex-wrap items-center gap-2.5 mb-5"
               >
                 <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px] font-mono tracking-wider uppercase">
@@ -793,9 +812,9 @@ const Index = () => {
 
               {/* 2. Main Title Heading */}
               <motion.h1
-                initial={{ opacity: 0, y: MOTION_OFFSET.MD }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.15)}
+                initial={heroInitial(MOTION_OFFSET.MD)}
+                animate={heroAnimate}
+                transition={heroTransition(0.15)}
                 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-6 max-w-2xl"
               >
                 hi, i'm{" "}
@@ -805,9 +824,9 @@ const Index = () => {
 
               {/* 3. Contextual Metadata Quick-Pills */}
               <motion.div
-                initial={{ opacity: 0, y: MOTION_OFFSET.SM }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.22)}
+                initial={heroInitial(MOTION_OFFSET.SM)}
+                animate={heroAnimate}
+                transition={heroTransition(0.22)}
                 className="flex flex-wrap items-center gap-2 mb-6 text-[11px] font-mono text-muted-foreground/80"
               >
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-border/50 bg-surface/30">
@@ -826,9 +845,9 @@ const Index = () => {
 
               {/* 4. Paragraph Bio */}
               <motion.p
-                initial={{ opacity: 0, y: MOTION_OFFSET.MD }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.3)}
+                initial={heroInitial(MOTION_OFFSET.MD)}
+                animate={heroAnimate}
+                transition={heroTransition(0.30)}
                 className="text-[15px] sm:text-lg text-muted-foreground max-w-xl leading-[1.85] mb-9"
               >
                 i build modern, scalable, and user-focused web applications.
@@ -838,9 +857,9 @@ const Index = () => {
 
               {/* 5. Call To Action Button Group */}
               <motion.div
-                initial={{ opacity: 0, y: MOTION_OFFSET.MD }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.4)}
+                initial={heroInitial(MOTION_OFFSET.MD)}
+                animate={heroAnimate}
+                transition={heroTransition(0.40)}
                 className="flex flex-wrap items-center gap-3.5 mb-11"
               >
                 <Link
@@ -867,9 +886,9 @@ const Index = () => {
 
               {/* 6. Mini Metrics Counter Strip */}
               <motion.div
-                initial={{ opacity: 0, y: MOTION_OFFSET.SM }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={getRevealTransition(MOTION_DURATION.NORMAL, 0.48)}
+                initial={heroInitial(MOTION_OFFSET.SM)}
+                animate={heroAnimate}
+                transition={heroTransition(0.48)}
                 className="pt-6 border-t border-border/40 grid grid-cols-3 gap-4 max-w-lg"
               >
                 <div className="flex flex-col gap-0.5">

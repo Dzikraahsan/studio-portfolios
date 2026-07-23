@@ -4,20 +4,17 @@ import type { Variants, Transition } from "framer-motion";
 
 export const MOTION_DURATION = {
   INSTANT: 0,
-  FAST: 0.15,
+  FAST: 0.18,
   NORMAL: 0.25,
-  MEDIUM: 0.4,
-  SLOW: 0.6,
-  SLOWER: 0.8,
-} as const;
+  MEDIUM: 0.35,
+  SLOW: 0.55,
+};
 
 export const MOTION_OFFSET = {
   NONE: 0,
-  SM: 8,
+  SM: 4,
   MD: 14,
-  LG: 20,
-  XL: 32,
-} as const;
+};
 
 export const MOTION_SCALE = {
   COMPRESSED: 0.7,
@@ -58,6 +55,27 @@ export const MOTION_SPRING = {
     damping: 24,
   } satisfies Transition,
 } as const;
+
+export const getHeroMotion = (isMobile: boolean) => ({
+  initial: isMobile
+    ? false
+    : { opacity: 0, y: MOTION_OFFSET.SM },
+
+  headingInitial: isMobile
+    ? false
+    : { opacity: 0, y: MOTION_OFFSET.MD },
+
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+
+  transition: (delay: number) =>
+    getRevealTransition(
+      isMobile ? 0.22 : MOTION_DURATION.NORMAL,
+      isMobile ? Math.min(delay * 0.2, 0.08) : delay
+    ),
+});
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────
 
@@ -138,15 +156,14 @@ export const mobileMenuVariants: Variants = {
 };
 
 export const mobileMenuItemVariants: Variants = {
-  hidden: {
+  hidden: ({ y }) => ({
     opacity: 0,
-    y: MOTION_OFFSET.MD,
-    scale: MOTION_SCALE.TACTILE_SUBTLE,
-  },
+    y,
+  }),
+
   visible: {
     opacity: 1,
-    y: MOTION_OFFSET.NONE,
-    scale: MOTION_SCALE.DEFAULT,
+    y: 0,
   },
   exit: {
     opacity: 0,

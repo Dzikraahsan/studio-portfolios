@@ -3,9 +3,9 @@ import {
   ElementType,
   ReactNode,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
 } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -17,7 +17,14 @@ import {
   revealVariants,
 } from "@/lib/motion";
 
-type AllowedElement = "div" | "section" | "article" | "li" | "header" | "footer" | "a";
+type AllowedElement =
+  | "div"
+  | "section"
+  | "article"
+  | "li"
+  | "header"
+  | "footer"
+  | "a";
 
 type RevealBaseProps<T extends AllowedElement> = {
   children: ReactNode;
@@ -27,8 +34,9 @@ type RevealBaseProps<T extends AllowedElement> = {
   as?: T;
 };
 
-export type RevealProps<T extends AllowedElement = "div"> = RevealBaseProps<T> &
-  Omit<ComponentPropsWithoutRef<T>, keyof RevealBaseProps<T>>;
+export type RevealProps<T extends AllowedElement = "div"> =
+  RevealBaseProps<T> &
+    Omit<ComponentPropsWithoutRef<T>, keyof RevealBaseProps<T>>;
 
 const Reveal = <T extends AllowedElement = "div">({
   children,
@@ -42,48 +50,54 @@ const Reveal = <T extends AllowedElement = "div">({
   const MotionTag = motion[as || "div"] as ElementType;
 
   const ref = useRef<HTMLDivElement | null>(null);
+
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
 
-  const intersectionMargin = isMobile ? "0px 0px 15% 0px" : "0px 0px -5% 0px";
-
+  // Observer hanya dipakai di desktop
   const inView = useInView(ref, {
     once: true,
-    amount: isMobile ? 0.01 : 0.05,
-    margin: intersectionMargin,
+    amount: 0.05,
+    margin: "0px 0px -5% 0px",
   });
 
   const [forceShow, setForceShow] = useState(false);
 
   useEffect(() => {
-    if (inView || prefersReducedMotion) return;
+    if (prefersReducedMotion || isMobile) return;
 
-    const fallbackTime = isMobile ? 250 : 1200;
-    const timer = setTimeout(() => setForceShow(true), fallbackTime);
+    if (inView) return;
+
+    const timer = window.setTimeout(() => {
+      setForceShow(true);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [inView, prefersReducedMotion, isMobile]);
 
-  const isVisible = inView || forceShow || Boolean(prefersReducedMotion);
+  const isVisible = prefersReducedMotion
+    ? true
+    : isMobile
+    ? true
+    : inView || forceShow;
 
   const yOffset = prefersReducedMotion
     ? MOTION_OFFSET.NONE
     : isMobile
-    ? MOTION_OFFSET.SM
+    ? 4
     : MOTION_OFFSET.MD;
 
   const duration = prefersReducedMotion
     ? MOTION_DURATION.INSTANT
     : isMobile
-    ? MOTION_DURATION.NORMAL
+    ? 0.22
     : MOTION_DURATION.SLOW;
 
   const computedDelay = prefersReducedMotion
     ? 0
     : isMobile
-    ? Math.min(index * 0.02, 0.1)
+    ? 0
     : calculateStaggerDelay(index, isMobile, delay);
-
 
   const transitionConfig = useMemo(
     () => getRevealTransition(duration, computedDelay),
@@ -96,7 +110,7 @@ const Reveal = <T extends AllowedElement = "div">({
       className={className}
       custom={{ y: yOffset }}
       variants={revealVariants}
-      initial="hidden"
+      initial={isMobile ? false : "hidden"}
       animate={isVisible ? "visible" : "hidden"}
       transition={transitionConfig}
       style={style}
