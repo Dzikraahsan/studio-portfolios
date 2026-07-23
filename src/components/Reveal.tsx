@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -38,29 +39,35 @@ const Reveal = <T extends AllowedElement = "div">({
   style,
   ...rest
 }: RevealProps<T>) => {
-  const Component = (as || "div") as ElementType;
-  const MotionTag = motion.create(Component);
+  const MotionTag = motion[as || "div"] as ElementType;
 
   const ref = useRef<HTMLDivElement | null>(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+
+  const intersectionMargin = isMobile ? "0px 0px 50px 0px" : "0px 0px -5% 0px";
+
   const inView = useInView(ref, {
     once: true,
     amount: 0.05,
-    margin: "0px 0px -5% 0px",
+    margin: intersectionMargin,
   });
 
-  const isMobile = useIsMobile();
-  const prefersReducedMotion = useReducedMotion();
   const [forceShow, setForceShow] = useState(false);
 
   useEffect(() => {
     if (inView || prefersReducedMotion) return;
-    const timer = setTimeout(() => setForceShow(true), 1200);
+
+    const fallbackTime = isMobile ? 600 : 1200;
+    const timer = setTimeout(() => setForceShow(true), fallbackTime);
+
     return () => clearTimeout(timer);
-  }, [inView, prefersReducedMotion]);
+  }, [inView, prefersReducedMotion, isMobile]);
 
   const isVisible = inView || forceShow || Boolean(prefersReducedMotion);
 
   const yOffset = prefersReducedMotion || isMobile ? MOTION_OFFSET.NONE : MOTION_OFFSET.MD;
+
   const duration = prefersReducedMotion
     ? MOTION_DURATION.INSTANT
     : isMobile
@@ -71,6 +78,11 @@ const Reveal = <T extends AllowedElement = "div">({
     ? 0
     : calculateStaggerDelay(index, isMobile, delay);
 
+  const transitionConfig = useMemo(
+    () => getRevealTransition(duration, computedDelay),
+    [duration, computedDelay]
+  );
+
   return (
     <MotionTag
       ref={ref}
@@ -79,11 +91,8 @@ const Reveal = <T extends AllowedElement = "div">({
       variants={revealVariants}
       initial="hidden"
       animate={isVisible ? "visible" : "hidden"}
-      transition={getRevealTransition(duration, computedDelay)}
-      style={{
-        willChange: isVisible ? "auto" : "opacity, transform",
-        ...style,
-      }}
+      transition={transitionConfig}
+      style={style}
       {...(rest as ComponentPropsWithoutRef<ElementType>)}
     >
       {children}

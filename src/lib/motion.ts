@@ -1,5 +1,7 @@
 import type { Variants, Transition } from "framer-motion";
 
+// ─── MOTION TOKENS ─────────────────────────────────────────────────────────
+
 export const MOTION_DURATION = {
   INSTANT: 0,
   FAST: 0.15,
@@ -57,8 +59,17 @@ export const MOTION_SPRING = {
   } satisfies Transition,
 } as const;
 
+// ─── TYPES ─────────────────────────────────────────────────────────────────
+
+export interface RevealCustomProps {
+  y?: number;
+  opacity?: number;
+}
+
+// ─── VARIANTS & TRANSITIONS ────────────────────────────────────────────────
+
 export const revealVariants: Variants = {
-  hidden: (custom?: { y?: number; opacity?: number }) => ({
+  hidden: (custom?: RevealCustomProps) => ({
     opacity: custom?.opacity ?? 0,
     y: custom?.y ?? MOTION_OFFSET.MD,
   }),
@@ -129,7 +140,7 @@ export const mobileMenuVariants: Variants = {
 export const mobileMenuItemVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 15,
+    y: MOTION_OFFSET.MD,
     scale: MOTION_SCALE.TACTILE_SUBTLE,
   },
   visible: {
@@ -139,10 +150,12 @@ export const mobileMenuItemVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    y: 10,
+    y: MOTION_OFFSET.SM,
     scale: MOTION_SCALE.TACTILE_SUBTLE,
   },
 };
+
+// ─── UTILITIES ─────────────────────────────────────────────────────────────
 
 export const calculateStaggerDelay = (
   index: number,
@@ -150,6 +163,9 @@ export const calculateStaggerDelay = (
   customDelay?: number
 ): number => {
   if (customDelay !== undefined) return customDelay;
-  const staggerStep = isMobile ? MOTION_STAGGER.MOBILE : MOTION_STAGGER.DESKTOP;
-  return Math.min(index * staggerStep, MOTION_STAGGER.MAX_DELAY);
+
+  return Math.min(
+    index * (isMobile ? MOTION_STAGGER.MOBILE : MOTION_STAGGER.DESKTOP),
+    MOTION_STAGGER.MAX_DELAY
+  );
 };

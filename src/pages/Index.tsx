@@ -495,7 +495,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
       };
     } else {
       setVisible(false);
-      const timer = setTimeout(() => setMounted(false), 200);
+      const timer = setTimeout(() => setMounted(false), 300);
       return () => clearTimeout(timer);
     }
   }, [project]);
@@ -525,7 +525,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-index-project-title"
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 transform-gpu ${
         visible
           ? "bg-background/40 backdrop-blur-md opacity-100"
           : "bg-background/0 backdrop-blur-none opacity-0"
@@ -540,7 +540,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
 
       {project && (
         <div
-          className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-primary/25 bg-surface/70 backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-300 ${
+          className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-primary/25 bg-surface/70 backdrop-blur-xl shadow-2xl overflow-hidden transition-[opacity,transform] duration-300 transform-gpu ${
             visible
               ? "opacity-100 scale-100 translate-y-0"
               : "opacity-0 scale-95 translate-y-4"
@@ -578,13 +578,13 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
               type="button"
               onClick={onClose}
               aria-label="Close project details modal"
-              className="p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="relative before:absolute before:-inset-2 p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
             >
               <X size={16} aria-hidden="true" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden overscroll-contain">
             <div>
               <SectionLabel>About Project</SectionLabel>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -691,7 +691,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
                 href={demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
               >
                 <span>launch live site</span>
                 <ArrowUpRight size={13} aria-hidden="true" />
@@ -753,11 +753,11 @@ const Index = () => {
         <section className="min-h-[55vh] md:min-h-[60vh] flex flex-col justify-center py-6 md:py-4 relative overflow-visible">
           {/* ── Ambient Background Glow Decorator ── */}
           <div
-            className="pointer-events-none absolute -top-12 -left-12 w-96 h-96 bg-primary/10 rounded-full blur-[120px] opacity-50 z-0"
+            className="pointer-events-none absolute -top-12 -left-12 w-96 h-96 bg-primary/10 rounded-full blur-[120px] opacity-50 z-0 transform-gpu"
             aria-hidden="true"
           />
           <div
-            className="pointer-events-none absolute top-1/2 -right-12 w-80 h-80 bg-primary/5 rounded-full blur-[100px] opacity-40 z-0"
+            className="pointer-events-none absolute top-1/2 -right-12 w-80 h-80 bg-primary/5 rounded-full blur-[100px] opacity-40 z-0 transform-gpu"
             aria-hidden="true"
           />
 
@@ -845,7 +845,7 @@ const Index = () => {
               >
                 <Link
                   to="/projects"
-                  className="group/cta-prim inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3.5 rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_hsl(var(--primary)/0.35)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group/cta-prim inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-6 py-3.5 rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_hsl(var(--primary)/0.35)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
                   style={{ willChange: "transform" }}
                 >
                   <span>view projects</span>
@@ -858,7 +858,7 @@ const Index = () => {
 
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-border/70 bg-surface/20 text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3.5 rounded-xl hover:bg-surface/60 hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="inline-flex items-center gap-2 border border-border/70 bg-surface/20 text-foreground font-mono text-xs tracking-wider uppercase px-6 py-3.5 rounded-xl hover:bg-surface/60 hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
                   style={{ willChange: "transform" }}
                 >
                   contact me
@@ -986,7 +986,7 @@ const Index = () => {
               <div className="mt-auto">
                 <Link
                   to="/about"
-                  className="group font-mono text-xs text-primary inline-flex items-center gap-1.5 py-2 pr-2 rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="group font-mono text-xs text-primary inline-flex items-center gap-1.5 py-2 pr-2 rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background select-none [-webkit-tap-highlight-color:transparent]"
                 >
                   <span className="relative">
                     read more
@@ -1090,7 +1090,7 @@ const Index = () => {
             </h2>
             <Link
               to="/projects"
-              className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm select-none [-webkit-tap-highlight-color:transparent]"
             >
               view all <ArrowRight size={12} aria-hidden="true" />
             </Link>
@@ -1122,7 +1122,7 @@ const Index = () => {
               <Link
                 key={to}
                 to={to}
-                className="group relative flex flex-col rounded-xl border border-border/60 bg-surface/30 p-6 overflow-hidden transition-all duration-300 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="group relative flex flex-col rounded-xl border border-border/60 bg-surface/30 p-6 overflow-hidden transition-all duration-300 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
                 style={{ willChange: "transform" }}
               >
                 <span className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
@@ -1203,13 +1203,13 @@ const Index = () => {
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <Link
                     to="/contact"
-                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:glow-sm transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:glow-sm transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
                   >
                     get in touch <ArrowRight size={14} aria-hidden="true" />
                   </Link>
                   <Link
                     to="/projects"
-                    className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:border-primary/60 hover:text-primary transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="inline-flex items-center gap-2 border border-border text-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-md hover:border-primary/60 hover:text-primary transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
                   >
                     explore work
                   </Link>

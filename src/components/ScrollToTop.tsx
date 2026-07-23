@@ -7,23 +7,26 @@ const ScrollToTop = (): null => {
   useEffect(() => {
     if (hash) return;
 
-    try {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "instant" as ScrollBehavior,
-      });
-    } catch {
-      window.scrollTo(0, 0);
-    }
+    const frameId = requestAnimationFrame(() => {
+      try {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "instant" as ScrollBehavior,
+        });
+      } catch {
+        window.scrollTo(0, 0);
+      }
 
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+      setTimeout(() => {
+        const mainContent = document.getElementById("main-content");
+        if (mainContent) {
+          mainContent.focus({ preventScroll: true });
+        }
+      }, 10);
+    });
 
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus({ preventScroll: true });
-    }
+    return () => cancelAnimationFrame(frameId);
   }, [pathname, search, hash]);
 
   return null;

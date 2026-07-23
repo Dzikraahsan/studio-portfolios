@@ -168,7 +168,7 @@ const ContactForm = memo(() => {
             placeholder="your name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full bg-surface/30 border border-border/50 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-all duration-200 font-mono"
+            className="w-full bg-surface/30 border border-border/50 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-[background-color,border-color] duration-200 font-mono"
           />
           <span id="contact-name-hint" className="sr-only">
             At least 2 characters.
@@ -201,7 +201,7 @@ const ContactForm = memo(() => {
             placeholder="your email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full bg-surface/30 border border-border/50 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-all duration-200 font-mono"
+            className="w-full bg-surface/30 border border-border/50 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-[background-color,border-color] duration-200 font-mono"
           />
           <span id="contact-email-hint" className="sr-only">
             A valid email address so I can reply.
@@ -233,7 +233,7 @@ const ContactForm = memo(() => {
             placeholder="your message..."
             value={formData.message}
             onChange={handleChange}
-            className="w-full bg-surface/30 border border-border/50 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-all duration-200 font-mono resize-none [scrollbar-width:none]"
+            className="w-full bg-surface/30 border border-border/50 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-[background-color,border-color] duration-200 font-mono resize-none [scrollbar-width:none]"
           />
           <span id="contact-message-hint" className="sr-only">
             At least 5 characters describing what you'd like to talk about.
@@ -257,13 +257,13 @@ const ContactForm = memo(() => {
         <button
           type="submit"
           disabled={loading}
-          className="group/btn inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-xl hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_hsl(var(--primary)/0.2)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none"
+          className="group/btn inline-flex items-center gap-2 bg-primary text-primary-foreground font-mono text-xs tracking-wider uppercase px-5 py-2.5 rounded-xl hover:scale-[1.02] hover:-translate-y-px hover:shadow-[0_8px_30px_hsl(var(--primary)/0.2)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
           style={{ willChange: "transform" }}
         >
           <span>{loading ? "sending..." : "dispatch"}</span>
           <Send
             size={12}
-            className={`transition-transform duration-300 ease-out ${
+            className={`transition-transform duration-300 ease-out transform-gpu ${
               loading ? "animate-pulse" : "group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
             }`}
           />
@@ -275,14 +275,13 @@ const ContactForm = memo(() => {
 
 ContactForm.displayName = "ContactForm";
 
-
 const Contact = () => {
   return (
     <PageTransition>
       <div className="container pt-28 sm:pt-32 -mb-4 pb-6 relative">
         {/* Background Radial Glow */}
         <div
-          className="pointer-events-none absolute top-40 right-10 w-72 h-72 bg-primary/5 rounded-full blur-[120px] opacity-40 z-0"
+          className="pointer-events-none absolute top-40 right-10 w-72 h-72 bg-primary/5 rounded-full blur-[120px] opacity-40 z-0 transform-gpu"
           aria-hidden="true"
         />
 
@@ -325,7 +324,8 @@ const Contact = () => {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between px-4 py-3 border border-border/40 bg-surface/5 hover:bg-surface/10 hover:border-border/80 rounded-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group flex items-center justify-between px-4 py-3 border border-border/40 bg-surface/5 hover:bg-surface/10 hover:border-border/80 rounded-xl transition-[background-color,border-color,transform] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
+                  style={{ willChange: "transform" }}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-background/50 text-muted-foreground transition-colors duration-300 group-hover:border-primary/30 group-hover:text-primary">
@@ -341,7 +341,7 @@ const Contact = () => {
                     </span>
                     <ArrowUpRight
                       size={13}
-                      className="transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      className="transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transform-gpu"
                     />
                   </div>
                 </Reveal>
@@ -376,7 +376,7 @@ const Contact = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                 {HIGHLIGHTS.map((item, i) => (
                   <Reveal key={item.label} index={i} delay={0.15 + i * 0.05}>
-                    <div className="group flex items-start gap-3 bg-surface/5 border border-border/40 hover:border-border/80 hover:bg-surface/10 rounded-2xl p-4 transition-all duration-300 ease-out h-full">
+                    <div className="group flex items-start gap-3 bg-surface/5 border border-border/40 hover:border-border/80 hover:bg-surface/10 rounded-2xl p-4 transition-[background-color,border-color,transform] duration-300 ease-out h-full transform-gpu">
                       <div className="mt-[1px] shrink-0 w-7 h-7 rounded-lg border border-border/60 bg-background/40 group-hover:border-primary/30 flex items-center justify-center transition-colors duration-300">
                         <item.icon
                           size={12}
@@ -403,7 +403,7 @@ const Contact = () => {
 
               {/* Preferred Contact Mode Node */}
               <Reveal delay={0.4}>
-                <div className="flex items-start gap-3.5 bg-surface/5 border border-border/30 rounded-2xl p-4">
+                <div className="flex items-start gap-3.5 bg-surface/5 border border-border/30 rounded-2xl p-4 transform-gpu">
                   <div className="mt-0.5 shrink-0 w-7 h-7 rounded-lg border border-border/50 bg-background/50 flex items-center justify-center">
                     <MessageSquare size={13} className="text-primary/70" />
                   </div>
@@ -421,7 +421,7 @@ const Contact = () => {
 
               {/* Institutional Statement Node */}
               <Reveal delay={0.5}>
-                <div className="rounded-2xl border border-border/40 bg-surface/5 px-4 py-4 flex flex-col gap-2 transition-colors duration-300 hover:border-border/60">
+                <div className="rounded-2xl border border-border/40 bg-surface/5 px-4 py-4 flex flex-col gap-2 transition-colors duration-300 hover:border-border/60 transform-gpu">
                   <p className="text-[11px] text-muted-foreground/70 leading-relaxed font-normal">
                     currently handling remote architectures worldwide, ensuring complete technological compliance with design metrics.
                   </p>

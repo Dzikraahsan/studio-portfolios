@@ -369,20 +369,6 @@ const ALL_CATEGORIES: readonly Category[] = [
   "Portfolio",
 ] as const;
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
-
-function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return reduced;
-}
-
 // ─── Shared Primitives ────────────────────────────────────────────────────────
 
 export const StatusBadge = memo(({ status }: { status: ProjectStatus }) => (
@@ -426,7 +412,7 @@ export const Chip = memo(
     className?: string;
   }) => (
     <span
-      className={`inline-flex items-center whitespace-nowrap text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border border-border/50 bg-background/50 text-muted-foreground transition-all duration-200 hover:-translate-y-px hover:border-border/70 ${className}`}
+      className={`inline-flex items-center whitespace-nowrap text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border border-border/50 bg-background/50 text-muted-foreground transition-colors duration-200 hover:-translate-y-px hover:border-border/70 ${className}`}
       style={{ willChange: "transform" }}
     >
       {children}
@@ -456,7 +442,7 @@ const FilterPill = memo(
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 ${
+      className={`relative inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border transition-[background-color,border-color,color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 select-none [-webkit-tap-highlight-color:transparent] ${
         active
           ? "border-primary/40 bg-primary/10 text-primary"
           : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground"
@@ -511,7 +497,7 @@ const FeaturedCard = memo(
     return (
       <div
         onClick={() => onOpenDetails(project)}
-        className="relative rounded-2xl border border-primary/20 bg-surface/40 overflow-hidden transition-all duration-300 md:hover:-translate-y-px md:hover:border-primary/30 cursor-pointer group"
+        className="relative rounded-2xl border border-primary/20 bg-surface/40 overflow-hidden transition-[background-color,border-color,transform,box-shadow] duration-300 md:hover:-translate-y-px md:hover:border-primary/30 cursor-pointer group transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
         style={{ willChange: "transform" }}
       >
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -551,7 +537,7 @@ const FeaturedCard = memo(
                     rel="noopener noreferrer"
                     aria-label={`Open live demo for ${project.title}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="shrink-0 flex items-center gap-1 text-muted-foreground/50 hover:text-primary transition-all duration-200 hover:-translate-y-0.5 hover:translate-x-0.5 mt-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                    className="shrink-0 flex items-center gap-1 text-muted-foreground/50 hover:text-primary transition-[color,transform] duration-200 hover:-translate-y-0.5 hover:translate-x-0.5 mt-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
                     style={{ willChange: "transform" }}
                   >
                     <ArrowUpRight size={15} aria-hidden="true" />
@@ -634,11 +620,11 @@ const FeaturedCard = memo(
           <div className="flex items-center justify-between pt-4 border-t border-border/35 mt-5">
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm select-none [-webkit-tap-highlight-color:transparent]"
             >
               <ChevronDown
                 size={12}
-                className="-rotate-90 group-hover:translate-x-0.5 transition-transform"
+                className="-rotate-90 group-hover:translate-x-0.5 transition-transform transform-gpu"
                 aria-hidden="true"
               />
               <span>view details</span>
@@ -650,7 +636,7 @@ const FeaturedCard = memo(
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-[color,transform] duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
                 style={{ willChange: "transform" }}
               >
                 <span>live demo</span>
@@ -683,7 +669,7 @@ export const ProjectCard = memo(
       <Reveal index={index}>
         <div
           onClick={() => onOpenDetails(project)}
-          className="flex flex-col h-full rounded-2xl border border-border/40 bg-surface/10 md:hover:border-border/70 md:hover:bg-surface/20 md:hover:shadow-[0_8px_30px_-12px_hsl(var(--primary)/0.08)] md:hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer overflow-hidden group w-full"
+          className="flex flex-col h-full rounded-2xl border border-border/40 bg-surface/10 md:hover:border-border/70 md:hover:bg-surface/20 md:hover:shadow-[0_8px_30px_-12px_hsl(var(--primary)/0.08)] md:hover:-translate-y-1 transition-[background-color,border-color,transform,box-shadow] duration-300 ease-out cursor-pointer overflow-hidden group w-full transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
           style={{ willChange: "transform" }}
         >
           {/* Main Card Body */}
@@ -747,11 +733,11 @@ export const ProjectCard = memo(
           <div className="flex items-center justify-between px-5 py-3.5 bg-muted/5 border-t border-border/25 mt-auto transition-colors duration-300 md:group-hover:bg-muted/10">
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/50 group-hover:text-primary transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm select-none [-webkit-tap-highlight-color:transparent]"
             >
               <ChevronDown
                 size={12}
-                className="-rotate-90 transition-transform duration-300 ease-out md:group-hover:translate-x-0.5 md:group-hover:text-primary"
+                className="-rotate-90 transition-transform duration-300 ease-out md:group-hover:translate-x-0.5 md:group-hover:text-primary transform-gpu"
                 aria-hidden="true"
               />
               <span>view details</span>
@@ -763,13 +749,13 @@ export const ProjectCard = memo(
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-all duration-300 hover:-translate-y-0.5 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-primary transition-[color,transform] duration-300 hover:-translate-y-0.5 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
                 style={{ willChange: "transform" }}
               >
                 <span>live demo</span>
                 <ArrowUpRight
                   size={12}
-                  className="transition-transform duration-300 ease-out md:group-hover:-translate-y-0.5 md:group-hover:translate-x-0.5"
+                  className="transition-transform duration-300 ease-out md:group-hover:-translate-y-0.5 md:group-hover:translate-x-0.5 transform-gpu"
                   aria-hidden="true"
                 />
               </a>
@@ -812,7 +798,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
       setVisible(false);
       const timeout = setTimeout(() => {
         setMounted(false);
-      }, 200);
+      }, 300);
 
       return () => clearTimeout(timeout);
     }
@@ -848,7 +834,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-project-title"
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 transform-gpu ${
         visible
           ? "bg-background/40 backdrop-blur-md opacity-100"
           : "bg-background/0 backdrop-blur-none opacity-0"
@@ -865,7 +851,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
       {/* Modal Card Content */}
       {project && (
         <div
-          className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-primary/25 bg-surface/70 backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-300 ${
+          className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-primary/25 bg-surface/70 backdrop-blur-xl shadow-2xl overflow-hidden transition-[opacity,transform] duration-300 transform-gpu ${
             visible
               ? "opacity-100 scale-100 translate-y-0"
               : "opacity-0 scale-95 translate-y-4"
@@ -905,14 +891,14 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
               type="button"
               onClick={onClose}
               aria-label="Close project details"
-              className="p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="relative before:absolute before:-inset-2 p-1.5 rounded-lg border border-border/40 bg-surface/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
             >
               <X size={16} aria-hidden="true" />
             </button>
           </div>
 
           {/* Scrollable Modal Body */}
-          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden overscroll-contain">
             {/* Description */}
             <div>
               <SectionLabel>About Project</SectionLabel>
@@ -1024,7 +1010,8 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
                 href={demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/25 rounded-lg transition-[background-color,transform] duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
+                style={{ willChange: "transform" }}
               >
                 <span>launch live site</span>
                 <ArrowUpRight size={13} aria-hidden="true" />
@@ -1164,7 +1151,7 @@ const Projects = () => {
           </div>
 
           {/* Year timeline */}
-          <div className="flex items-center gap-4 mb-12 overflow-x-auto pb-1">
+          <div className="flex items-center gap-4 mb-12 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {yearGroups.map(([year, count], i) => (
               <div key={year} className="flex items-center gap-4 shrink-0">
                 {i > 0 && <span className="h-px w-6 bg-border/40 shrink-0" />}
@@ -1223,7 +1210,7 @@ const Projects = () => {
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="search by title, tech, or category…"
                 aria-label="Search projects by title, technology, or category"
-                className="w-full sm:max-w-sm bg-surface/30 border border-border/50 rounded-xl pl-9 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-all duration-200 font-mono"
+                className="w-full sm:max-w-sm bg-surface/30 border border-border/50 rounded-xl pl-9 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:bg-surface/50 transition-[background-color,border-color] duration-200 font-mono"
               />
             </div>
 
@@ -1274,7 +1261,7 @@ const Projects = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-foreground transition-colors duration-200 px-2 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                  className="relative before:absolute before:-inset-2 inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/50 hover:text-foreground transition-[color,transform] duration-200 px-2 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm transform-gpu select-none [-webkit-tap-highlight-color:transparent]"
                   style={{ willChange: "transform" }}
                 >
                   <X size={10} aria-hidden="true" /> clear
@@ -1306,7 +1293,7 @@ const Projects = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-3 text-[11px] font-mono text-primary/60 hover:text-primary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                  className="relative before:absolute before:-inset-2 mt-3 text-[11px] font-mono text-primary/60 hover:text-primary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm select-none [-webkit-tap-highlight-color:transparent]"
                 >
                   clear filters
                 </button>
@@ -1323,7 +1310,7 @@ const Projects = () => {
 
         {/* ── Footer Note Archive ── */}
         <Reveal index={4} className="mt-14 pb-2 -mb-24">
-          <div className="rounded-2xl border border-border/40 bg-surface/20 px-5 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 transition-colors duration-200 hover:border-border/60">
+          <div className="rounded-2xl border border-border/40 bg-surface/20 px-5 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 transition-[border-color] duration-200 hover:border-border/60">
             <p className="text-sm text-muted-foreground">
               more projects live quietly on github — open source, drafts, and
               experiments.

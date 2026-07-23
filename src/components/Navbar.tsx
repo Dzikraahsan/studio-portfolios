@@ -40,6 +40,12 @@ const Navbar = memo(() => {
 
   // Desktop Indicator Position Calculator
   const updateIndicator = useCallback(() => {
+    // CRITICAL FIX: Bypass DOM measurement on mobile devices to prevent layout thrashing on scroll-resize
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setIndicatorStyle((prev) => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
+      return;
+    }
+
     const activeLink = linksRef.current[location.pathname];
     const container = containerRef.current;
 
@@ -58,45 +64,41 @@ const Navbar = memo(() => {
     }
   }, [location.pathname]);
 
+  // Window Resize Listener
   useEffect(() => {
     updateIndicator();
     window.addEventListener("resize", updateIndicator);
     return () => window.removeEventListener("resize", updateIndicator);
   }, [updateIndicator]);
 
+  // HIGH FIX: Consolidated Mobile Overlay Side-Effects (Scroll Lock & Escape Key)
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
+    if (!mobileOpen) {
       document.body.style.overflow = "";
+      return;
     }
 
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
+    document.body.style.overflow = "hidden";
 
-  useEffect(() => {
-    if (mobileOpen) {
-      setMobileOpen(false);
-      menuButtonRef.current?.focus();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
-
-  useEffect(() => {
-    if (!mobileOpen) return;
-
-    const onKey = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setMobileOpen(false);
         menuButtonRef.current?.focus();
       }
     };
 
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [mobileOpen]);
+
+  // Close Mobile Menu strictly on Route Change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
@@ -107,7 +109,7 @@ const Navbar = memo(() => {
         <div className="container flex items-center justify-between h-14">
           <Link
             to="/"
-            className="font-mono text-sm font-semibold tracking-tight text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            className="font-mono text-sm font-semibold tracking-tight text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm select-none [-webkit-tap-highlight-color:transparent]"
           >
             Dzii<span className="text-primary">27</span>
           </Link>
@@ -160,7 +162,8 @@ const Navbar = memo(() => {
               ref={menuButtonRef}
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="text-foreground min-h-11 min-w-11 inline-flex items-center justify-center rounded-md transition-colors duration-200 active:bg-surface/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              // MEDIUM FIX: Added touch feedback enhancement classes
+              className="text-foreground min-h-11 min-w-11 inline-flex items-center justify-center rounded-md transition-colors duration-200 active:bg-surface/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent]"
               aria-label={
                 mobileOpen ? "Close navigation menu" : "Open navigation menu"
               }
@@ -200,7 +203,7 @@ const Navbar = memo(() => {
 
             {/* Navigation Links List */}
             <div className="relative flex flex-col gap-2.5 w-full max-w-sm mx-auto my-auto z-10">
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/45 block mb-1 pl-1">
+              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground/45 block mb-1 pl-1 select-none">
                 / navigation menu
               </span>
 
@@ -222,9 +225,9 @@ const Navbar = memo(() => {
                   >
                     <Link
                       to={link.to}
-                      onClick={() => setMobileOpen(false)}
                       aria-current={isActive ? "page" : undefined}
-                      className={`group relative flex items-center justify-between w-full p-4 rounded-xl border font-mono text-sm transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      // MEDIUM FIX: Added touch feedback enhancement classes
+                      className={`group relative flex items-center justify-between w-full p-4 rounded-xl border font-mono text-sm transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none [-webkit-tap-highlight-color:transparent] ${
                         isActive
                           ? "bg-primary/5 border-primary/25 text-primary"
                           : "bg-surface/20 border-border/40 text-muted-foreground active:bg-surface/40 active:border-border/60 hover:text-foreground"
@@ -271,7 +274,7 @@ const Navbar = memo(() => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.25 }}
-              className="relative z-10 border-t border-border/30 pt-4 text-center w-full max-w-sm mx-auto font-mono text-[9px] text-muted-foreground/30 tracking-widest uppercase"
+              className="relative z-10 border-t border-border/30 pt-4 text-center w-full max-w-sm mx-auto font-mono text-[9px] text-muted-foreground/30 tracking-widest uppercase select-none"
             >
               dzii27 © personal page
             </motion.div>
