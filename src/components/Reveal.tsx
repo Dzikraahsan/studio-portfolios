@@ -45,11 +45,11 @@ const Reveal = <T extends AllowedElement = "div">({
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
 
-  const intersectionMargin = isMobile ? "0px 0px 50px 0px" : "0px 0px -5% 0px";
+  const intersectionMargin = isMobile ? "0px 0px 15% 0px" : "0px 0px -5% 0px";
 
   const inView = useInView(ref, {
     once: true,
-    amount: 0.05,
+    amount: isMobile ? 0.01 : 0.05,
     margin: intersectionMargin,
   });
 
@@ -58,7 +58,7 @@ const Reveal = <T extends AllowedElement = "div">({
   useEffect(() => {
     if (inView || prefersReducedMotion) return;
 
-    const fallbackTime = isMobile ? 600 : 1200;
+    const fallbackTime = isMobile ? 250 : 1200;
     const timer = setTimeout(() => setForceShow(true), fallbackTime);
 
     return () => clearTimeout(timer);
@@ -66,17 +66,24 @@ const Reveal = <T extends AllowedElement = "div">({
 
   const isVisible = inView || forceShow || Boolean(prefersReducedMotion);
 
-  const yOffset = prefersReducedMotion || isMobile ? MOTION_OFFSET.NONE : MOTION_OFFSET.MD;
+  const yOffset = prefersReducedMotion
+    ? MOTION_OFFSET.NONE
+    : isMobile
+    ? MOTION_OFFSET.SM
+    : MOTION_OFFSET.MD;
 
   const duration = prefersReducedMotion
     ? MOTION_DURATION.INSTANT
     : isMobile
-    ? MOTION_DURATION.MEDIUM
+    ? MOTION_DURATION.NORMAL
     : MOTION_DURATION.SLOW;
 
   const computedDelay = prefersReducedMotion
     ? 0
+    : isMobile
+    ? Math.min(index * 0.02, 0.1)
     : calculateStaggerDelay(index, isMobile, delay);
+
 
   const transitionConfig = useMemo(
     () => getRevealTransition(duration, computedDelay),

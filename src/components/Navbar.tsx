@@ -127,7 +127,9 @@ const Navbar = () => {
               ref={menuButtonRef}
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="text-foreground min-h-11 min-w-11 inline-flex items-center justify-end pr-1 rounded-md transition-colors duration-200 active:bg-surface/30 focus:outline-none"
+              className="text-foreground min-h-11 min-w-11 inline-flex items-center justify-end pr-1 rounded-md transition-colors duration-150 active:bg-surface/30 active:scale-95 focus:outline-none"
+              style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
+
               aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-menu"
@@ -153,8 +155,9 @@ const Navbar = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
             className="fixed inset-0 z-40 bg-background/30 backdrop-blur-xl flex flex-col justify-between p-6 pt-24"
+            style={{ touchAction: "manipulation", willChange: "opacity" }}
           >
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
 
@@ -169,14 +172,13 @@ const Navbar = () => {
                 return (
                   <motion.div
                     key={link.to}
-                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
                     transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 30,
-                      delay: i * 0.04,
+                      duration: 0.18,
+                      ease: [0.22, 1, 0.36, 1],
+                      delay: i * 0.015,
                     }}
                     className="w-full"
                   >
@@ -184,11 +186,12 @@ const Navbar = () => {
                       to={link.to}
                       onClick={() => setMobileOpen(false)}
                       aria-current={isActive ? "page" : undefined}
-                      className={`group relative flex items-center justify-between w-full p-4 rounded-xl border font-mono text-sm transition-all duration-200 ${
+                      className={`group relative flex items-center justify-between w-full p-4 rounded-xl border font-mono text-sm transition-colors duration-150 active:scale-[0.98] ${
                         isActive
                           ? "bg-primary/5 border-primary/25 text-primary"
-                          : "bg-surface/20 border-border/40 text-muted-foreground active:bg-surface/40 active:border-border/60 text-foreground"
+                          : "bg-surface/20 border-border/40 text-muted-foreground active:bg-surface/40 active:border-border/60"
                       }`}
+                      style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
                     >
                       <div className="flex items-center gap-3">
                         <span
@@ -219,7 +222,7 @@ const Navbar = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.25 }}
+              transition={{ delay: 0.12, duration: 0.15 }}
               className="relative border-t border-border/30 pt-4 text-center w-full max-w-sm mx-auto font-mono text-[9px] text-muted-foreground/30 tracking-widest uppercase"
             >
               dzii27 © personal page
@@ -227,6 +230,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </  AnimatePresence>
+
     </>
   );
 };

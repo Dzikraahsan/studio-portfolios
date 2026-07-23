@@ -55,6 +55,13 @@ export const ClickSpark = memo<ClickSparkProps>(
     className = "",
     style,
   }) => {
+    const isMobileRef = useRef<boolean>(
+      typeof window !== "undefined" &&
+        (window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768)
+    );
+    const effectiveSparkCount = isMobileRef.current ? Math.min(sparkCount, 5) : sparkCount;
+    const effectiveDuration = isMobileRef.current ? Math.min(duration, 300) : duration;
+
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const sparksRef = useRef<Spark[]>([]);
     const animationIdRef = useRef<number | null>(null);
@@ -94,35 +101,37 @@ export const ClickSpark = memo<ClickSparkProps>(
 
         const activeColor = cachedSparkColorRef.current;
 
+        ctx.strokeStyle = activeColor;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+
         sparksRef.current = sparksRef.current.filter((spark) => {
           const elapsed = timestamp - spark.startTime;
-          if (elapsed >= duration) return false;
+          if (elapsed >= effectiveDuration) return false;
 
-          const progress = elapsed / duration;
+          const progress = elapsed / effectiveDuration;
           const eased = calculateEasing(progress, easing);
 
           const distance = eased * sparkRadius * extraScale;
           const lineLength = sparkSize * (1 - eased);
 
-          const x1 = spark.x + distance * Math.cos(spark.angle);
-          const y1 = spark.y + distance * Math.sin(spark.angle);
-          const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
-          const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
+          const cos = Math.cos(spark.angle);
+          const sin = Math.sin(spark.angle);
+          const x1 = spark.x + distance * cos;
+          const y1 = spark.y + distance * sin;
+          const x2 = spark.x + (distance + lineLength) * cos;
+          const y2 = spark.y + (distance + lineLength) * sin;
 
-          ctx.save();
-          ctx.strokeStyle = activeColor;
           ctx.globalAlpha = Math.max(0, 1 - progress);
-          ctx.lineWidth = 2.5;
-          ctx.lineCap = "round";
-
           ctx.beginPath();
           ctx.moveTo(x1, y1);
           ctx.lineTo(x2, y2);
           ctx.stroke();
-          ctx.restore();
 
           return true;
         });
+
+        ctx.globalAlpha = 1;
 
         if (sparksRef.current.length > 0) {
           animationIdRef.current = requestAnimationFrame(draw);
@@ -130,7 +139,8 @@ export const ClickSpark = memo<ClickSparkProps>(
           animationIdRef.current = null;
         }
       },
-      [duration, easing, extraScale, sparkRadius, sparkSize]
+      [effectiveDuration, easing, extraScale, sparkRadius, sparkSize]
+
     );
 
     const startAnimation = useCallback(() => {
@@ -168,16 +178,23 @@ export const ClickSpark = memo<ClickSparkProps>(
       };
 
       const handleResize = () => {
-        cancelAnimationFrame(resizeFrameId);
+        if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
         resizeFrameId = requestAnimationFrame(resizeCanvas);
       };
 
-      const observer = new ResizeObserver(handleResize);
-      observer.observe(parent);
+      let observer: ResizeObserver | null = null;
+      if (typeof ResizeObserver !== "undefined") {
+        observer = new ResizeObserver(handleResize);
+        observer.observe(parent);
+      } else {
+        window.addEventListener("resize", handleResize);
+      }
       resizeCanvas();
 
+
       return () => {
-        observer.disconnect();
+        if (observer) observer.disconnect();
+        else window.removeEventListener("resize", handleResize);
         cancelAnimationFrame(resizeFrameId);
         if (animationIdRef.current !== null) {
           cancelAnimationFrame(animationIdRef.current);
@@ -201,13 +218,15 @@ export const ClickSpark = memo<ClickSparkProps>(
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
+      const count = effectiveSparkCount;
       const now = performance.now();
-      const newSparks: Spark[] = Array.from({ length: sparkCount }, (_, i) => ({
+      const newSparks: Spark[] = Array.from({ length: count }, (_, i) => ({
         x,
         y,
-        angle: (2 * Math.PI * i) / sparkCount,
+        angle: (2 * Math.PI * i) / count,
         startTime: now,
       }));
+
 
       if (sparksRef.current.length > 64) {
         sparksRef.current = sparksRef.current.slice(-32);
